@@ -1,9 +1,9 @@
 # Prompt builder
 
-This is a simple prompt builder for OpenAI models. Easy to use and to modify.
+This is a simple prompt builder for OpenAI models. Easy to use and to modify. To install this backage, run:
 
 ```python
-pip install -r requirements.txt
+pip install git+https://github.com/TeiaLabs/prompts.git
 ```
 
 Build your own prompt by creating a file following a sample.prompt file, and use the DynamicPrompt class to parse it:
