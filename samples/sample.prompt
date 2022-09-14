@@ -2,7 +2,7 @@
 title: Sample prompt
 prompt: |
     Fix and improve writing of the sentence below:
-    {input_sentence}
+    <input_sentence>
 
     Fixed sentence:
 top-1: 1
