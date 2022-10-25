@@ -5,7 +5,7 @@ from prompts import DynamicPrompt
 
 def test_ensemble():
     templates = ['<label>', 'a photo of <label>', 'picture of <label>']
-    vars = ['<label>']
+    vars = ['label']
     
     prompt = PromptEnsemble(templates, vars)
 
@@ -22,7 +22,7 @@ def test_ensemble():
 
 def test_invalid_ensemble_template():
     templates = ['<label>', 'a photo of <img_class>', 'piucture of <label>']
-    vars = ['<label>']
+    vars = ['label']
 
    # expect exception
     with pytest.raises(ValueError):

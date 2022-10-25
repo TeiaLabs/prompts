@@ -18,7 +18,7 @@ def test_prompt():
 
 def test_str_prompt():
     template = 'a photo of a <img_label>'
-    expected_var = '<img_label>'
+    expected_var = 'img_label'
 
     prompt = DynamicPrompt(template, expected_var)
     filled_prompt = prompt.build(img_label='dog')

@@ -10,7 +10,7 @@ pip install git+https://github.com/TeiaLabs/prompts.git
 
 ```python
 template = 'a photo of a <img_label>'
-expected_var = '<img_label>'
+expected_var = 'img_label'
 
 prompt = DynamicPrompt(template, expected_var)
 filled_prompt = prompt.build(img_label='dog')
@@ -53,7 +53,7 @@ templates = [
     'a photo of <label>', 
     'picture of <label>',
 ]
-exp_vars = ['<label>']
+exp_vars = ['label']
 prompt = PromptEnsemble(templates, exp_vars)
 prompt.build(label='dog')
 # out: ['dog', 'a photo of dog', 'picture of dog']
