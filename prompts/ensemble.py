@@ -4,7 +4,11 @@ from .prompt_builder import DynamicPrompt
 
 class PromptEnsemble:
 
-    def __init__(self, templates: list[str], expected_vars: list[str]):
+    def __init__(
+        self, templates: list[str], 
+        expected_vars: list[str], 
+        prompt_class=DynamicPrompt,
+    ):
         """
         Args:
             templates: templates with placeholder variable names
@@ -22,7 +26,7 @@ class PromptEnsemble:
         """
         self.prompts = []
         for template in templates:
-            self.prompts.append(DynamicPrompt(template, expected_vars))
+            self.prompts.append(prompt_class(template, expected_vars))
 
     def build(self, **kwargs):
         filled_prompts = []
