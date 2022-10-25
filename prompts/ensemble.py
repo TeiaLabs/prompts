@@ -1,12 +1,13 @@
 from __future__ import annotations
-from .prompt_builder import DynamicPrompt
+from typing import Type, Optional
+from .prompt_builder import DynamicPrompt, BasePrompt
 
 
 class PromptEnsemble:
 
     def __init__(
-        self, templates: list[str], 
-        expected_vars: list[str], 
+        self, templates: list[str] | Type[BasePrompt],
+        expected_vars: Optional[list[str]] = None,
         prompt_class=DynamicPrompt,
     ):
         """
@@ -24,12 +25,26 @@ class PromptEnsemble:
             prompt = PromptEnsemble(templates, expected_vars)
         ```
         """
+
         self.prompts = []
         for template in templates:
-            self.prompts.append(prompt_class(template, expected_vars))
+            if isinstance(template, str):
+                if expected_vars is None:
+                    raise ValueError('expected_vars argument is mandatory when using string templates')
+                self.prompts.append(prompt_class(template, expected_vars))
+            else:
+                self.prompts.append(template)
 
     def build(self, **kwargs):
         filled_prompts = []
         for prompt in self.prompts:
             filled_prompts.append(prompt.build(**kwargs))
         return filled_prompts
+
+    @ classmethod
+    def from_paths(cls, paths: list[str], prompt_class=DynamicPrompt):
+        prompts = []
+        for path in paths:
+            prompts.append(prompt_class.from_file(path))
+
+        return cls(prompts, None)
