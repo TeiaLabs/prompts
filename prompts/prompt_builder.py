@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from .utils import load_yaml
 
 
@@ -25,7 +27,10 @@ class BasePrompt:
     def set_prompt_values(self, **kwargs):
         prompt = self.prompt
         for var, value in kwargs.items():
-            prompt = prompt.replace(f"<{var}>", value)
+            pattern = f"<{var}>"
+            if pattern not in prompt:
+                raise ValueError(f"Variable {var} was not found in prompt (expected vars={self.vars}).")
+            prompt = prompt.replace(pattern, value)
         return prompt
 
     @classmethod
@@ -35,6 +40,10 @@ class BasePrompt:
             prompt=prompt['prompt'],
             vars=prompt['vars'],            
         )
+    
+    @abstractmethod
+    def build(self, **kwargs) -> str:
+        raise NotImplementedError
 
 
 class DynamicPrompt(BasePrompt):
@@ -54,4 +63,3 @@ class Prompt(BasePrompt):
         return self.set_prompt_values(
             input_sentence=input_sentence        
         )
-
