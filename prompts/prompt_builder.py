@@ -11,13 +11,14 @@ class BasePrompt:
         - build(self, var1, var2, ...)
     '''
 
-    def __init__(self, prompt, vars):
-        self.prompt = prompt
-        self.vars = vars
-        self._check_vars()
- 
+    def __init__(self, prompt, template_vars=None):
+        self.prompt = prompt        
+        self.template_vars = template_vars
+        if template_vars is not None:
+            self._check_vars()
+
     def _check_vars(self, check_build=True):
-        for var in self.vars:
+        for var in self.template_vars:
             # chec if var is an argument of self.build
             if check_build and var not in self.build.__code__.co_varnames:
                 raise ValueError(f"Missing argument in method self.build: {var}")
@@ -29,7 +30,7 @@ class BasePrompt:
         for var, value in kwargs.items():
             pattern = f"<{var}>"
             if pattern not in prompt:
-                raise ValueError(f"Variable {var} was not found in prompt (expected vars={self.vars}).")
+                raise ValueError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
             prompt = prompt.replace(pattern, value)
         return prompt
 
@@ -38,7 +39,7 @@ class BasePrompt:
         prompt = load_yaml(prompt_file)
         return cls(
             prompt=prompt['prompt'],
-            vars=prompt['vars'],            
+            template_vars=prompt['vars'],            
         )
     
     @abstractmethod
@@ -48,10 +49,11 @@ class BasePrompt:
 
 class DynamicPrompt(BasePrompt):
 
-    def __init__(self, prompt, vars):
+    def __init__(self, prompt, template_vars=None):
         self.prompt = prompt
-        self.vars = vars
-        self._check_vars(check_build=False)
+        self.template_vars = template_vars
+        if template_vars is not None:
+            self._check_vars(check_build=False)
 
     def build(self, **kwargs):
         return self.set_prompt_values(**kwargs)
