@@ -62,3 +62,23 @@ prompt.build(label='cat')
 ```
 
 The output is a flattened list with all filled in templates. Note: all templates must be filled with the same expected variables, and all variables must be provided.
+
+You can also build multiple promtps at the same time (useful for classification):
+
+```python
+templates = [
+    '<label>',
+    'a photo of <label>'
+]
+template_vars = [
+    'label'
+]
+labels = ['dog', 'cat', 't-shirt']
+
+prompt = PromptEnsemble(templates, template_vars)
+
+prompt.build_many(
+    label=labels
+)
+# out: ['dog', 'a photo of dog', 'cat', 'a photo of cat', 't-shirt', 'a photo of t-shirt']
+```
