@@ -83,10 +83,13 @@ class PromptEnsemble:
         ]
         return filled_prompts
 
-    @ classmethod
+    @classmethod
     def from_paths(cls, paths: list[str], prompt_class=DynamicPrompt):
         prompts = []
         for path in paths:
             prompts.append(prompt_class.from_file(path))
 
         return cls(prompts, None)
+    
+    def __len__(self):
+        return len(self.prompts)
