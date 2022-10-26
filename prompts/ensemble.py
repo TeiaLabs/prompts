@@ -36,7 +36,7 @@ class PromptEnsemble:
             else:
                 self.prompts.append(template)
 
-    def build(self, **kwargs):
+    def build(self, **kwargs) -> list:
         """
         Example:
         ```
@@ -51,7 +51,7 @@ class PromptEnsemble:
             filled_prompts.append(prompt.build(**kwargs))
         return filled_prompts
 
-    def build_many(self, **kwargs):
+    def build_many(self, **kwargs) -> list:
         """
         Example:
         ```
@@ -83,10 +83,13 @@ class PromptEnsemble:
         ]
         return filled_prompts
 
-    @ classmethod
+    @classmethod
     def from_paths(cls, paths: list[str], prompt_class=DynamicPrompt):
         prompts = []
         for path in paths:
             prompts.append(prompt_class.from_file(path))
 
         return cls(prompts, None)
+    
+    def __len__(self) -> int:
+        return len(self.prompts)
