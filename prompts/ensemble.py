@@ -14,9 +14,10 @@ class PromptEnsemble:
         Args:
             templates: templates with placeholder variable names
             expected_vars: variables expected in all templates
+            prompt_class: allows custom prompt classes
 
         Return:
-            A prompt ensemble object.
+            A PromptEnsemble object.
 
         Examples:
         ```
@@ -36,6 +37,15 @@ class PromptEnsemble:
                 self.prompts.append(template)
 
     def build(self, **kwargs):
+        """
+        Example:
+        ```
+            build(
+                label='dog',
+                superclass='animal',
+            )
+        ```
+        """
         filled_prompts = []
         for prompt in self.prompts:
             filled_prompts.append(prompt.build(**kwargs))
@@ -44,10 +54,12 @@ class PromptEnsemble:
     def build_many(self, **kwargs):
         """
         Example:
+        ```
             build_many(
                 label=['dog', 'cat', 't-shirt'],
                 superclass=['animal', 'animal', 'clothes']
             )
+        ```
         """
         var_names = list(kwargs.keys())
         n_vars = len(kwargs[var_names[0]])

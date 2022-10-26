@@ -27,9 +27,7 @@ def test_build_many():
     
     prompt = PromptEnsemble(templates, template_vars)
 
-    prompted_list = prompt.build_many(label=classes)
-
-    print(prompted_list)
+    prompted_list = prompt.build_many(label=classes)    
 
     assert len(prompted_list) == 6
     assert prompted_list[0] == 'dog'
