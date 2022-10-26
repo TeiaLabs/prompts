@@ -5,9 +5,9 @@ from prompts import DynamicPrompt
 
 def test_ensemble():
     templates = ['<label>', 'a photo of <label>', 'picture of <label>']
-    vars = ['label']
+    template_vars = ['label']
     
-    prompt = PromptEnsemble(templates, vars)
+    prompt = PromptEnsemble(templates, template_vars)
 
     prompted_list = prompt.build(label='dog')    
 
@@ -22,10 +22,10 @@ def test_ensemble():
 
 def test_build_many():
     templates = ['<label>', 'a photo of <label>']
-    im_vars = ['label']
+    template_vars = ['label']
     classes = ['dog', 'cat', 'horse']
     
-    prompt = PromptEnsemble(templates, im_vars)
+    prompt = PromptEnsemble(templates, template_vars)
 
     prompted_list = prompt.build_many(label=classes)
 
@@ -45,11 +45,11 @@ def test_build_many():
 
 def test_build_many_multiple_args():
     templates = ['<label>/<superclass>', 'a photo of <label>/<superclass>']
-    im_vars = ['label', 'superclass']
+    template_vars = ['label', 'superclass']
     labels = ['dog', 'cat', 't-shirt']
     superclasses = ['animal', 'animal', 'clothes']
     
-    prompt = PromptEnsemble(templates, im_vars)
+    prompt = PromptEnsemble(templates, template_vars)
 
     prompted_list = prompt.build_many(
         label=labels,
@@ -76,11 +76,11 @@ def test_build_many_multiple_args():
 
 def test_invalid_ensemble_template():
     templates = ['<label>', 'a photo of <img_class>', 'picture of <label>']
-    vars = ['label']
+    template_vars = ['label']
 
    # expect exception
     with pytest.raises(ValueError):
-        _ = PromptEnsemble(templates, vars)
+        _ = PromptEnsemble(templates, template_vars)
 
 
 def test_prompt_ensemble_from_file():
