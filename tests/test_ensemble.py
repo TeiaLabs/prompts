@@ -43,29 +43,6 @@ def test_build_many():
         _ = prompt.build(labels=['cat'])
 
 
-def test_build_many():
-    templates = ['<label>', 'a photo of <label>']
-    im_vars = ['label']
-    classes = ['dog', 'cat', 'horse']
-    
-    prompt = PromptEnsemble(templates, im_vars)
-
-    prompted_list = prompt.build_many(label=classes)
-
-    print(prompted_list)
-
-    assert len(prompted_list) == 6
-    assert prompted_list[0] == 'dog'
-    assert prompted_list[1] == 'a photo of dog'
-    assert prompted_list[2] == 'cat'
-    assert prompted_list[3] == 'a photo of cat'
-    assert prompted_list[4] == 'horse'
-    assert prompted_list[5] == 'a photo of horse'
-
-    with pytest.raises(ValueError):
-        _ = prompt.build(labels=['cat'])
-
-
 def test_build_many_multiple_args():
     templates = ['<label>/<superclass>', 'a photo of <label>/<superclass>']
     im_vars = ['label', 'superclass']
