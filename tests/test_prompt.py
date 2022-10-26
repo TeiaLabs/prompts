@@ -1,4 +1,4 @@
-import unittest 
+import pytest
 from prompts import DynamicPrompt 
 
 
@@ -23,3 +23,14 @@ def test_str_prompt():
     prompt = DynamicPrompt(template, expected_var)
     filled_prompt = prompt.build(img_label='dog')
     assert filled_prompt == 'a photo of a dog'
+
+
+def test_str_prompt_without_vars():
+    template = 'a photo of a <img_label>'
+
+    prompt = DynamicPrompt(template)
+    filled_prompt = prompt.build(img_label='dog')
+    assert filled_prompt == 'a photo of a dog'
+    
+    with pytest.raises(ValueError):
+        filled_prompt = prompt.build(img_labels='dog')
