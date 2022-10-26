@@ -40,7 +40,7 @@ setuptools.setup(
     url="https://github.com/TeiaLabs/Recruit",
     packages=setuptools.find_packages(),
     keywords="prompt openai teialabs gpt3",
-    python_requires=">=3.9",
+    python_requires=">=3.7",
     install_requires=requirements,
     extras_require=opt_requirements,
 )
