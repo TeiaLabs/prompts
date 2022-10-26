@@ -20,8 +20,85 @@ def test_ensemble():
         _ = prompt.build(img_class='cat')
 
 
+def test_build_many():
+    templates = ['<label>', 'a photo of <label>']
+    im_vars = ['label']
+    classes = ['dog', 'cat', 'horse']
+    
+    prompt = PromptEnsemble(templates, im_vars)
+
+    prompted_list = prompt.build_many(label=classes)
+
+    print(prompted_list)
+
+    assert len(prompted_list) == 6
+    assert prompted_list[0] == 'dog'
+    assert prompted_list[1] == 'a photo of dog'
+    assert prompted_list[2] == 'cat'
+    assert prompted_list[3] == 'a photo of cat'
+    assert prompted_list[4] == 'horse'
+    assert prompted_list[5] == 'a photo of horse'
+
+    with pytest.raises(ValueError):
+        _ = prompt.build(labels=['cat'])
+
+
+def test_build_many():
+    templates = ['<label>', 'a photo of <label>']
+    im_vars = ['label']
+    classes = ['dog', 'cat', 'horse']
+    
+    prompt = PromptEnsemble(templates, im_vars)
+
+    prompted_list = prompt.build_many(label=classes)
+
+    print(prompted_list)
+
+    assert len(prompted_list) == 6
+    assert prompted_list[0] == 'dog'
+    assert prompted_list[1] == 'a photo of dog'
+    assert prompted_list[2] == 'cat'
+    assert prompted_list[3] == 'a photo of cat'
+    assert prompted_list[4] == 'horse'
+    assert prompted_list[5] == 'a photo of horse'
+
+    with pytest.raises(ValueError):
+        _ = prompt.build(labels=['cat'])
+
+
+def test_build_many_multiple_args():
+    templates = ['<label>/<superclass>', 'a photo of <label>/<superclass>']
+    im_vars = ['label', 'superclass']
+    labels = ['dog', 'cat', 't-shirt']
+    superclasses = ['animal', 'animal', 'clothes']
+    
+    prompt = PromptEnsemble(templates, im_vars)
+
+    prompted_list = prompt.build_many(
+        label=labels,
+        superclass=superclasses,
+    )
+    expected = [
+        'dog/animal', 
+        'a photo of dog/animal', 
+        'cat/animal', 
+        'a photo of cat/animal', 
+        't-shirt/clothes', 
+        'a photo of t-shirt/clothes',
+    ]
+
+    assert prompted_list == expected
+
+    # Test error 
+    with pytest.raises(ValueError):
+        prompted_list = prompt.build_many(
+            label=labels,
+            superclass=superclasses[:-1],
+        )
+
+
 def test_invalid_ensemble_template():
-    templates = ['<label>', 'a photo of <img_class>', 'piucture of <label>']
+    templates = ['<label>', 'a photo of <img_class>', 'picture of <label>']
     vars = ['label']
 
    # expect exception
