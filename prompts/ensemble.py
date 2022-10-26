@@ -41,6 +41,36 @@ class PromptEnsemble:
             filled_prompts.append(prompt.build(**kwargs))
         return filled_prompts
 
+    def build_many(self, **kwargs):
+        """
+        Example:
+            build_many(
+                label=['dog', 'cat', 't-shirt'],
+                superclass=['animal', 'animal', 'clothes']
+            )
+        """
+        var_names = list(kwargs.keys())
+        n_vars = len(kwargs[var_names[0]])
+
+        ns = set([len(v) for v in kwargs.values()])
+        if len(ns) > 1:
+            raise ValueError(
+                f'All arguments must have the same number of elements.'
+                f'Current element sizes: {ns}'
+            )
+        
+        vars_to_fill = [
+            {var_name: kwargs[var_name][i] for var_name in var_names}
+            for i in range(n_vars)
+        ]
+
+        filled_prompts = [
+            prompt.build(**var_fill) 
+            for var_fill in vars_to_fill 
+            for prompt in self.prompts
+        ]
+        return filled_prompts
+
     @ classmethod
     def from_paths(cls, paths: list[str], prompt_class=DynamicPrompt):
         prompts = []
