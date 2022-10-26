@@ -36,7 +36,7 @@ class PromptEnsemble:
             else:
                 self.prompts.append(template)
 
-    def build(self, **kwargs):
+    def build(self, **kwargs) -> list:
         """
         Example:
         ```
@@ -51,7 +51,7 @@ class PromptEnsemble:
             filled_prompts.append(prompt.build(**kwargs))
         return filled_prompts
 
-    def build_many(self, **kwargs):
+    def build_many(self, **kwargs) -> list:
         """
         Example:
         ```
@@ -91,5 +91,5 @@ class PromptEnsemble:
 
         return cls(prompts, None)
     
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.prompts)
