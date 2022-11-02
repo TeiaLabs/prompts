@@ -34,3 +34,17 @@ def test_str_prompt_without_vars():
     
     with pytest.raises(ValueError):
         filled_prompt = prompt.build(img_labels='dog')
+
+
+def test_strict_mode():
+    template = 'a photo of a <img_label>'
+    template_vars=['img_label']
+    
+    prompt = DynamicPrompt(template, template_vars)
+    filled_prompt = prompt.build(
+        strict=False, img_label='dog', animal='mamal')
+    assert filled_prompt == 'a photo of a dog'
+
+    with pytest.raises(ValueError):
+        filled_prompt = prompt.build(
+            strict=True, img_label='dog', animal='mamal')
