@@ -1,36 +1,45 @@
 import pytest
 from prompts import DynamicPrompt 
 
-
-def test_prompt():
-    prompt_file = 'samples/sample.prompt'
-    prompt = DynamicPrompt.from_file(prompt_file)
-    prompt_str = prompt.build(input_sentence='lets go')
-    assert 'lets go' in prompt_str
-    expected_prompt = ((
-        'Fix and improve writing of the sentence below:\n'
-        'lets go\n'
-        '\n'
-        'Fixed sentence:\n'
-    ))
-    assert expected_prompt == prompt_str
-
-
-def test_str_prompt():
-    template = 'a photo of a <img_label>'
-    expected_var = 'img_label'
-
-    prompt = DynamicPrompt(template, expected_var)
-    filled_prompt = prompt.build(img_label='dog')
-    assert filled_prompt == 'a photo of a dog'
-
-
-def test_str_prompt_without_vars():
-    template = 'a photo of a <img_label>'
-
-    prompt = DynamicPrompt(template)
-    filled_prompt = prompt.build(img_label='dog')
-    assert filled_prompt == 'a photo of a dog'
+class TestPrompt:
     
-    with pytest.raises(ValueError):
-        filled_prompt = prompt.build(img_labels='dog')
+    template = 'a photo of a <img_label>'
+    template_vars = 'img_label'
+
+    @staticmethod
+    def test_prompt_from_file():
+        prompt_file = 'samples/sample.prompt'
+        prompt = DynamicPrompt.from_file(prompt_file)
+        prompt_str = prompt.build(input_sentence='lets go')
+        assert 'lets go' in prompt_str
+        expected_prompt = ((
+            'Fix and improve writing of the sentence below:\n'
+            'lets go\n'
+            '\n'
+            'Fixed sentence:\n'
+        ))
+        assert expected_prompt == prompt_str
+
+    @staticmethod
+    def test_str_prompt():
+
+        prompt = DynamicPrompt(TestPrompt.template, TestPrompt.template_vars)
+        filled_prompt = prompt.build(img_label='dog')
+        assert filled_prompt == 'a photo of a dog'
+
+    @staticmethod
+    def test_str_prompt_without_vars():
+        prompt = DynamicPrompt(TestPrompt.template)
+        filled_prompt = prompt.build(img_label='dog')
+        assert filled_prompt == 'a photo of a dog'
+        
+        with pytest.raises(ValueError):
+            filled_prompt = prompt.build(img_labels='dog')
+
+    @staticmethod
+    def test_strict_mode():
+
+        prompt = DynamicPrompt(TestPrompt.template, TestPrompt.template_vars)
+        filled_prompt = prompt.build(
+            strict=False, img_label='dog', animal='mamal')
+        assert filled_prompt == 'a photo of a dog'

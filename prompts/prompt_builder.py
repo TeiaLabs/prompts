@@ -12,7 +12,7 @@ class BasePrompt:
     '''
 
     def __init__(self, prompt, template_vars=None):
-        self.prompt = prompt        
+        self.prompt = prompt
         self.template_vars = template_vars
         if template_vars is not None:
             self._check_vars()
@@ -25,11 +25,11 @@ class BasePrompt:
             if var not in self.prompt:
                 raise ValueError(f"Variable {var} was not found in prompt.")    
 
-    def set_prompt_values(self, **kwargs):
+    def set_prompt_values(self, strict=True, **kwargs):
         prompt = self.prompt
         for var, value in kwargs.items():
             pattern = f"<{var}>"
-            if pattern not in prompt:
+            if pattern not in prompt and strict:
                 raise ValueError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
             prompt = prompt.replace(pattern, value)
         return prompt
@@ -48,6 +48,16 @@ class BasePrompt:
 
 
 class DynamicPrompt(BasePrompt):
+    """
+    Example:
+    ```
+        template = "this is a <dog>"
+        template_vars = ['dog']
+        prompt = DynamicPrompt(template, template_vars)
+        prompt.build(dog="cat")
+        # "this is a cat"
+    ```
+    """
 
     def __init__(self, prompt, template_vars=None):
         self.prompt = prompt
@@ -60,8 +70,18 @@ class DynamicPrompt(BasePrompt):
 
 
 class Prompt(BasePrompt):
+    """
+        Example:
+        ```
+            template = "The following text: <input_sentence>"
+            template_vars = ['input_sentence']
+            prompt = Prompt(template, template_vars)
+            prompt.build(input_sentence="This is a test")
+            # "The following text: This is a test"
+        ```
+    """
 
     def build(self, input_sentence):
         return self.set_prompt_values(
-            input_sentence=input_sentence        
+            input_sentence=input_sentence
         )
