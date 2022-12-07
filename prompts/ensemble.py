@@ -1,12 +1,14 @@
 from __future__ import annotations
 from typing import Type, Optional
+
+from .exceptions import ExpectedVarsArgumentError, ArgumentNumberOfElementsError
 from .prompt_builder import DynamicPrompt, BasePrompt
 
 
 class PromptEnsemble:
-
     def __init__(
-        self, templates: list[str] | Type[BasePrompt],
+        self,
+        templates: list[str] | Type[BasePrompt],
         expected_vars: Optional[list[str]] = None,
         prompt_class=DynamicPrompt,
     ):
@@ -31,7 +33,9 @@ class PromptEnsemble:
         for template in templates:
             if isinstance(template, str):
                 if expected_vars is None:
-                    raise ValueError('expected_vars argument is mandatory when using string templates')
+                    raise ExpectedVarsArgumentError(
+                        "expected_vars argument is mandatory when using string templates"
+                    )
                 self.prompts.append(prompt_class(template, expected_vars))
             else:
                 self.prompts.append(template)
@@ -67,9 +71,9 @@ class PromptEnsemble:
 
         ns = set([len(v) for v in kwargs.values()])
         if len(ns) > 1:
-            raise ValueError(
-                f'All arguments must have the same number of elements.'
-                f'Current element sizes: {ns}'
+            raise ArgumentNumberOfElementsError(
+                f"All arguments must have the same number of elements."
+                f"Current element sizes: {ns}"
             )
 
         vars_to_fill = [
@@ -91,6 +95,6 @@ class PromptEnsemble:
             prompts.append(prompt_class.from_file(path))
 
         return cls(prompts, None)
-    
+
     def __len__(self) -> int:
         return len(self.prompts)
