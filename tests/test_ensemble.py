@@ -20,6 +20,31 @@ def test_ensemble():
         _ = prompt.build(img_class='cat')
 
 
+def test_build_missing_args_valid():
+    templates = ['<label>/<superclass>', 'a photo of <label>']
+    template_vars = ['label', 'superclass']
+
+    prompt = PromptEnsemble(templates, template_vars)
+
+    prompted_list = prompt.build(
+        label='dog',
+        superclass='animal',
+        strict=False,
+    )
+    expected = ['dog/animal', 'a photo of dog']
+
+    assert len(prompted_list) == 2
+    assert prompted_list == expected
+
+
+def test_build_missing_args_invalid():
+    templates = ['<label>', 'test']
+    template_vars = ['label']
+
+    with pytest.raises(ValueError):
+        _ = PromptEnsemble(templates, template_vars)
+
+
 def test_build_many():
     templates = ['<label>', 'a photo of <label>']
     template_vars = ['label']
@@ -70,6 +95,32 @@ def test_build_many_multiple_args():
             label=labels,
             superclass=superclasses[:-1],
         )
+
+
+def test_build_many_missing_args_valid():
+    templates = ['<label>/<superclass>', 'a photo of <label>']
+    template_vars = ['label', 'superclass']
+    labels = ['dog', 'cat', 't-shirt']
+    superclasses = ['animal', 'animal', 'clothes']
+
+    prompt = PromptEnsemble(templates, template_vars)
+
+    prompted_list = prompt.build_many(
+        label=labels,
+        superclass=superclasses,
+        strict=False,
+    )
+    expected = [
+        'dog/animal',
+        'a photo of dog',
+        'cat/animal',
+        'a photo of cat',
+        't-shirt/clothes',
+        'a photo of t-shirt',
+    ]
+
+    assert len(prompted_list) == 6
+    assert prompted_list == expected
 
 
 def test_invalid_ensemble_template():
