@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+from .exceptions import MissingArgumentError, VariableNotInPromptError, UndefinedVariableError
 from .utils import load_yaml
 
 
@@ -21,17 +22,17 @@ class BasePrompt:
         for var in self.template_vars:
             # check if var is an argument of self.build
             if check_build and var not in self.build.__code__.co_varnames:
-                raise ValueError(f"Missing argument in method self.build: {var}")
+                raise MissingArgumentError(f"Missing argument in method self.build: {var}")
         # check if all templates have at least one template variable
         if not any([var in self.prompt for var in self.template_vars]):
-            raise ValueError(f"Prompt has no template variables: '{self.prompt}'")
+            raise VariableNotInPromptError(f"Prompt has no template variables")
 
     def set_prompt_values(self, strict=True, **kwargs):
         prompt = self.prompt
         for var, value in kwargs.items():
             pattern = f"<{var}>"
             if pattern not in prompt and strict:
-                raise ValueError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
+                raise UndefinedVariableError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
             prompt = prompt.replace(pattern, value)
         return prompt
 

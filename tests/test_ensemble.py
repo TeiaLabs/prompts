@@ -1,7 +1,7 @@
 import pytest 
 from prompts.ensemble import PromptEnsemble
 from prompts import DynamicPrompt
-
+from prompts import exceptions 
 
 def test_ensemble():
     templates = ['<label>', 'a photo of <label>', 'picture of <label>']
@@ -16,7 +16,7 @@ def test_ensemble():
     assert prompted_list[1] == 'a photo of dog'
     assert prompted_list[2] == 'picture of dog'
 
-    with pytest.raises(ValueError):
+    with pytest.raises(exceptions.UndefinedVariableError):
         _ = prompt.build(img_class='cat')
 
 
@@ -41,7 +41,7 @@ def test_build_missing_args_invalid():
     templates = ['<label>', 'test']
     template_vars = ['label']
 
-    with pytest.raises(ValueError):
+    with pytest.raises(exceptions.VariableNotInPromptError):
         _ = PromptEnsemble(templates, template_vars)
 
 
@@ -62,7 +62,7 @@ def test_build_many():
     assert prompted_list[4] == 'horse'
     assert prompted_list[5] == 'a photo of horse'
 
-    with pytest.raises(ValueError):
+    with pytest.raises(exceptions.UndefinedVariableError):
         _ = prompt.build(labels=['cat'])
 
 
@@ -90,7 +90,7 @@ def test_build_many_multiple_args():
     assert prompted_list == expected
 
     # Test error 
-    with pytest.raises(ValueError):
+    with pytest.raises(exceptions.ArgumentNumberOfElementsError):
         prompted_list = prompt.build_many(
             label=labels,
             superclass=superclasses[:-1],
@@ -128,7 +128,7 @@ def test_invalid_ensemble_template():
     template_vars = ['label']
 
    # expect exception
-    with pytest.raises(ValueError):
+    with pytest.raises(exceptions.VariableNotInPromptError):
         _ = PromptEnsemble(templates, template_vars)
 
 
