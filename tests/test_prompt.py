@@ -1,5 +1,6 @@
 import pytest
 from prompts import DynamicPrompt 
+from prompts import exceptions
 
 class TestPrompt:
     
@@ -33,7 +34,7 @@ class TestPrompt:
         filled_prompt = prompt.build(img_label='dog')
         assert filled_prompt == 'a photo of a dog'
         
-        with pytest.raises(ValueError):
+        with pytest.raises(exceptions.UndefinedVariableError):
             filled_prompt = prompt.build(img_labels='dog')
 
     @staticmethod

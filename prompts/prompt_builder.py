@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from .exceptions import MissingArgumentError, VariableNotInPromptError
+from .exceptions import MissingArgumentError, VariableNotInPromptError, UndefinedVariableError
 from .utils import load_yaml
 
 
@@ -32,7 +32,7 @@ class BasePrompt:
         for var, value in kwargs.items():
             pattern = f"<{var}>"
             if pattern not in prompt and strict:
-                raise VariableNotInPromptError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
+                raise UndefinedVariableError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
             prompt = prompt.replace(pattern, value)
         return prompt
 

@@ -26,3 +26,8 @@ class VariableNotInPromptError(PromptError):
     """Variable not found in prompt"""
 
     pass
+
+class UndefinedVariableError(PromptError):
+    """Atempted to use undeclared variables"""
+
+    pass
