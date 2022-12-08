@@ -61,6 +61,7 @@ class PromptEnsemble:
             )
         ```
         """
+        strict = kwargs.pop("strict", False)
         var_names = list(kwargs.keys())
         n_vars = len(kwargs[var_names[0]])
 
@@ -70,14 +71,14 @@ class PromptEnsemble:
                 f'All arguments must have the same number of elements.'
                 f'Current element sizes: {ns}'
             )
-        
+
         vars_to_fill = [
             {var_name: kwargs[var_name][i] for var_name in var_names}
             for i in range(n_vars)
         ]
 
         filled_prompts = [
-            prompt.build(**var_fill) 
+            prompt.build(**var_fill, strict=strict) 
             for var_fill in vars_to_fill 
             for prompt in self.prompts
         ]

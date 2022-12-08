@@ -19,11 +19,12 @@ class BasePrompt:
 
     def _check_vars(self, check_build=True):
         for var in self.template_vars:
-            # chec if var is an argument of self.build
+            # check if var is an argument of self.build
             if check_build and var not in self.build.__code__.co_varnames:
                 raise ValueError(f"Missing argument in method self.build: {var}")
-            if var not in self.prompt:
-                raise ValueError(f"Variable {var} was not found in prompt.")    
+        # check if all templates have at least one template variable
+        if not any([var in self.prompt for var in self.template_vars]):
+            raise ValueError(f"Prompt has no template variables: '{self.prompt}'")
 
     def set_prompt_values(self, strict=True, **kwargs):
         prompt = self.prompt
