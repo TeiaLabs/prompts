@@ -3,7 +3,7 @@
 This is a simple prompt builder for OpenAI models. Easy to use and to modify. To install this backage, run:
 
 ```python
-pip install git+https://github.com/TeiaLabs/prompts.git
+pip install "prompts @ git+https://github.com/TeiaLabs/prompts.git
 ```
 
 ## Dynamic prompts
