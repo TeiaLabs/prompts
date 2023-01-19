@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Optional
 
 from .exceptions import MissingArgumentError, VariableNotInPromptError, UndefinedVariableError
 from .utils import load_yaml
@@ -12,11 +13,21 @@ class BasePrompt:
         - build(self, var1, var2, ...)
     '''
 
-    def __init__(self, prompt, template_vars=None):
+    def __init__(
+        self,
+        prompt: str,
+        template_vars: Optional[list[str]] = None,
+        settings: Optional[dict[str, str]] = None,
+    ):
         self.prompt = prompt
         self.template_vars = template_vars
+        self.settings = settings
+
         if template_vars is not None:
             self._check_vars()
+
+    def get_model_settings(self) -> dict[str, str]:
+        return self.settings
 
     def _check_vars(self, check_build=True):
         for var in self.template_vars:
@@ -32,16 +43,20 @@ class BasePrompt:
         for var, value in kwargs.items():
             pattern = f"<{var}>"
             if pattern not in prompt and strict:
-                raise UndefinedVariableError(f"Variable {var} was not found in prompt (expected vars={self.template_vars}).")
+                raise UndefinedVariableError(
+                    f"Variable {var} was not found in prompt (expected vars={self.template_vars})."
+                )
             prompt = prompt.replace(pattern, value)
         return prompt
 
     @classmethod
     def from_file(cls, prompt_file: str):
         prompt = load_yaml(prompt_file)
+        settings = prompt.get('settings', None)
         return cls(
             prompt=prompt['prompt'],
-            template_vars=prompt['vars'],            
+            template_vars=prompt['vars'],
+            settings=settings,
         )
     
     @abstractmethod
@@ -61,9 +76,10 @@ class DynamicPrompt(BasePrompt):
     ```
     """
 
-    def __init__(self, prompt, template_vars=None):
+    def __init__(self, prompt, template_vars=None, settings=None):
         self.prompt = prompt
         self.template_vars = template_vars
+        self.settings = settings
         if template_vars is not None:
             self._check_vars(check_build=False)
 
