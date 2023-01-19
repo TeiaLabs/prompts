@@ -10,9 +10,8 @@ pip install "prompts @ git+https://github.com/TeiaLabs/prompts.git
 
 ```python
 template = 'a photo of a <img_label>'
-expected_var = 'img_label'
 
-prompt = DynamicPrompt(template, expected_var)
+prompt = DynamicPrompt(template)
 filled_prompt = prompt.build(img_label='dog')
 
 print(filled_prompt)
@@ -30,6 +29,11 @@ str_prompt = prompt.build(
 )
 ```
 
+You can also access recommended model settings (engine, temperature) that can be fed to the model input (e.g., openai.Completion.create()):
+
+```python
+prompt.get_model_settings()
+```
 
 ## Improve Autocomplete with custom prompts 
 Alternatively, to get more control and better autocomplete suggestions, you can inherit from the `BasePrompt` class and override the build method with explicit arguments:

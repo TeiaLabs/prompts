@@ -5,7 +5,9 @@ prompt: |
     <input_sentence>
 
     Fixed sentence:
-top-1: 1
-temperature: 0.15
 vars:
     - input_sentence
+settings:
+    top-k: 1
+    temperature: 0.15
+    engine: text-davinci-003

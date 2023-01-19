@@ -3,6 +3,7 @@ from prompts.ensemble import PromptEnsemble
 from prompts import DynamicPrompt
 from prompts import exceptions 
 
+
 def test_ensemble():
     templates = ['<label>', 'a photo of <label>', 'picture of <label>']
     template_vars = ['label']
@@ -18,6 +19,8 @@ def test_ensemble():
 
     with pytest.raises(exceptions.UndefinedVariableError):
         _ = prompt.build(img_class='cat')
+
+    assert len(prompt) == 3
 
 
 def test_build_missing_args_valid():
@@ -35,6 +38,13 @@ def test_build_missing_args_valid():
 
     assert len(prompted_list) == 2
     assert prompted_list == expected
+
+
+def test_build_missing_args():
+    templates = ['<label>/<superclass>', 'a photo of <label>']    
+
+    with pytest.raises(exceptions.ExpectedVarsArgumentError):
+        PromptEnsemble(templates, expected_vars=None)
 
 
 def test_build_missing_args_invalid():
@@ -135,7 +145,7 @@ def test_invalid_ensemble_template():
 def test_prompt_ensemble_from_file():
     prompts = []
     for i in range(3):
-        prompt_file = 'samples/sample.prompt'
+        prompt_file = 'samples/sample.prompt.yaml'
         prompt = DynamicPrompt.from_file(prompt_file)
         prompts.append(prompt)
     
@@ -153,4 +163,4 @@ def test_prompt_ensemble_from_file():
         input_sentence='lets go'
     )
 
-    assert prompt_ff == prompt_str
+    assert prompt_ff == prompt_str    
