@@ -31,7 +31,7 @@ with open("README.md", "r") as readme_file:
 
 setuptools.setup(
     name="prompts",
-    version="0.0.1",
+    version="0.0.21",
     author="Teialabs",
     author_email="jonatas@teialabs.com",
     description="Create and parse prompts for OpenAI models.",
