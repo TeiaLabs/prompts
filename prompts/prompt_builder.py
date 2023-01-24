@@ -18,10 +18,12 @@ class BasePrompt:
         prompt: str,
         template_vars: Optional[list[str]] = None,
         settings: Optional[dict[str, str]] = None,
+        title: Optional[str] = None
     ):
         self.prompt = prompt
         self.template_vars = template_vars
         self.settings = settings
+        self.title = title
 
         if template_vars is not None:
             self._check_vars()
@@ -63,6 +65,14 @@ class BasePrompt:
     def build(self, **kwargs) -> str:
         raise NotImplementedError
 
+    def __repr__(self):
+        return (
+            f'{self.__class__.__name__}('
+            f'prompt="""{self.prompt}""", '
+            f'template_vars={self.template_vars}, '
+            f'settings={self.settings}'
+        )
+
 
 class DynamicPrompt(BasePrompt):
     """
@@ -76,10 +86,17 @@ class DynamicPrompt(BasePrompt):
     ```
     """
 
-    def __init__(self, prompt, template_vars=None, settings=None):
+    def __init__(
+        self,
+        prompt: str,
+        template_vars: Optional[list[str]] = None,
+        settings: Optional[dict[str, str]] = None,
+        title: Optional[str] = None
+    ):
         self.prompt = prompt
         self.template_vars = template_vars
         self.settings = settings
+        self.title = title
         if template_vars is not None:
             self._check_vars(check_build=False)
 
