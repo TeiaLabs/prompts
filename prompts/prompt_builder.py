@@ -57,7 +57,7 @@ class BasePrompt:
         settings = prompt.get('settings', None)
         return cls(
             prompt=prompt['prompt'],
-            template_vars=prompt['vars'],
+            template_vars=prompt['template_vars'],
             settings=settings,
         )
     
