@@ -5,7 +5,7 @@ prompt: |
     <input_sentence>
 
     Fixed sentence:
-vars:
+template_vars:
     - input_sentence
 settings:
     top-k: 1
