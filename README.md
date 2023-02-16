@@ -1,19 +1,19 @@
 # Prompt builder
 
-This is a simple prompt builder for OpenAI models. Easy to use and to modify. To install this backage, run:
+This is a simple prompt builder for OpenAI models. Easy to use and to modify.
 
-```python
-pip install prompts@git+https://github.com/TeiaLabs/prompts.git
-```
+## Install
+
+`pip install AIPrompts@git+https://github.com/TeiaLabs/prompts.git`
+
+`pip install AIPrompts`
 
 ## Dynamic prompts
 
 ```python
 template = 'a photo of a <img_label>'
-
 prompt = DynamicPrompt(template)
 filled_prompt = prompt.build(img_label='dog')
-
 print(filled_prompt)
 # out: "a photo of a dog"
 ```
@@ -35,7 +35,8 @@ You can also access recommended model settings (engine, temperature) that can be
 prompt.get_model_settings()
 ```
 
-## Improve Autocomplete with custom prompts 
+## Improve Autocomplete with custom prompts
+
 Alternatively, to get more control and better autocomplete suggestions, you can inherit from the `BasePrompt` class and override the build method with explicit arguments:
 
 ```python
@@ -78,9 +79,7 @@ template_vars = [
     'label'
 ]
 labels = ['dog', 'cat', 't-shirt']
-
 prompt = PromptEnsemble(templates, template_vars)
-
 prompt.build_many(
     label=labels
 )
