@@ -29,7 +29,7 @@ setuptools.setup(
     version=version,
     author="Teialabs",
     author_email="jonatas@teialabs.com",
-    description="Create and parse prompts for OpenAI models.",
+    description="Create and parse prompts for large language models.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/TeiaLabs/prompts",
