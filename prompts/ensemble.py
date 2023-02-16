@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Type, Optional
 
-from .exceptions import ExpectedVarsArgumentError, ArgumentNumberOfElementsError
-from .prompt_builder import DynamicPrompt, BasePrompt
+from typing import Optional, Type
+
+from .exceptions import ArgumentNumberOfElementsError, ExpectedVarsArgumentError
+from .prompt_builder import BasePrompt, DynamicPrompt
 
 
 class PromptEnsemble:
@@ -18,14 +19,10 @@ class PromptEnsemble:
             expected_vars: variables expected in all templates
             prompt_class: allows custom prompt classes
 
-        Return:
-            A PromptEnsemble object.
-
         Examples:
-        ```
-            templates = ["a photo of a <class>", "picture of <class>"]
-            expected_vars = ["class"]
-            prompt = PromptEnsemble(templates, expected_vars)
+        >>> templates = ["a photo of a <class>", "picture of <class>"]
+        >>> expected_vars = ["class"]
+        >>> prompt = PromptEnsemble(templates, expected_vars)
         ```
         """
 
@@ -82,8 +79,8 @@ class PromptEnsemble:
         ]
 
         filled_prompts = [
-            prompt.build(**var_fill, strict=strict) 
-            for var_fill in vars_to_fill 
+            prompt.build(**var_fill, strict=strict)
+            for var_fill in vars_to_fill
             for prompt in self.prompts
         ]
         return filled_prompts

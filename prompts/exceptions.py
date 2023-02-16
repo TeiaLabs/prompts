@@ -27,6 +27,7 @@ class VariableNotInPromptError(PromptError):
 
     pass
 
+
 class UndefinedVariableError(PromptError):
     """Atempted to use undeclared variables"""
 

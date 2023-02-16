@@ -1,6 +1,7 @@
 import pytest
-from prompts import DynamicPrompt, BasePrompt
-from prompts import exceptions
+
+from prompts import BasePrompt, DynamicPrompt, exceptions
+
 
 class TestPrompt:
     

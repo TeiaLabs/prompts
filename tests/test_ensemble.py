@@ -1,7 +1,7 @@
-import pytest 
+import pytest
+
+from prompts import DynamicPrompt, exceptions
 from prompts.ensemble import PromptEnsemble
-from prompts import DynamicPrompt
-from prompts import exceptions 
 
 
 def test_ensemble():
