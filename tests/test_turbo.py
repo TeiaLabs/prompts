@@ -66,7 +66,7 @@ def test_from_file():
     assert tp.settings == {
         "top-k": 1,
         "temperature": 0.15,
-        "engine": "text-davinci-003",
+        "engine": "gpt-3.5-turbo",
         "max_tokens": 32,
     }
 
@@ -95,4 +95,4 @@ def test_from_file_with_past_messages():
 
     # Check the title and settings attributes
     assert tp.title == "Turbo prompt with past messages"
-    assert tp.settings == {"engine": "text-davinci-003"}
+    assert tp.settings == {"engine": "gpt-3.5-turbo"}

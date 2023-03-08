@@ -28,4 +28,4 @@ past_messages:
             The function should return the sum of a and b, not their product.
 
 settings:    
-    engine: text-davinci-003
+    engine: gpt-3.5-turbo
