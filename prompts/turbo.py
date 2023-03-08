@@ -54,13 +54,26 @@ class TurboPrompt:
         assistant_prompt = DynamicPrompt(
             prompt=prompt_data["assistant_prompt"],
         )
-        return cls(
-            system_prompt=system_prompt, 
-            user_prompt=user_prompt, 
+        turbo_prompt = cls(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
             assistant_prompt=assistant_prompt,
             title=prompt_data["title"],
             settings=prompt_data["settings"],
         )
+        
+        for message in prompt_data.get("past_messages", []):
+
+            role = message.get("role")
+            inputs = message.get("inputs", {})
+            if role == 'user':
+                turbo_prompt.add_user_message(**inputs)
+            if role == 'assistant':
+                turbo_prompt.add_assistant_message(**inputs)
+            if role == 'system':
+                turbo_prompt.add_system_message(**inputs)
+
+        return turbo_prompt
 
     @classmethod
     def from_settings(

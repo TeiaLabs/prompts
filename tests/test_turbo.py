@@ -69,3 +69,30 @@ def test_from_file():
         "engine": "text-davinci-003",
         "max_tokens": 32,
     }
+
+
+def test_from_file_with_past_messages():
+    tp = TurboPrompt.from_yaml("samples/sample.past.yaml")
+
+    # Check the content of the past messages
+    assert tp.prompts[0]["prompt"] == "You are an AI that fixes code issues:\nLanguage: python\n"
+    assert tp.prompts[1]["prompt"] == "Code to check:\n```\ndef sum_numbers(a, b):\n    return a * b\n\n```\n"
+    assert tp.prompts[2]["prompt"] == "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n"
+
+    # Add a new user message with a different code
+    source_code = "def multiply_numbers(a, b):\n    return a * b\n"
+    tp.add_user_message(source_code=source_code)
+
+    # Check the built prompts
+    expected_messages = [
+        "You are an AI that fixes code issues:\nLanguage: python\n",
+        "Code to check:\n```\ndef sum_numbers(a, b):\n    return a * b\n\n```\n",
+        "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n",
+        "Code to check:\n```\ndef multiply_numbers(a, b):\n    return a * b\n\n```\n",
+    ]
+    text = tp.build()
+    assert [msg[role] for msg in text for role in msg] == expected_messages
+
+    # Check the title and settings attributes
+    assert tp.title == "Turbo prompt with past messages"
+    assert tp.settings == {"engine": "text-davinci-003"}

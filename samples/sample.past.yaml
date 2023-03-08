@@ -1,0 +1,31 @@
+title: Turbo prompt with past messages
+system_prompt: |
+    You are an AI that fixes code issues:
+    Language: <language>
+user_prompt: |
+    Code to check:
+    ```
+    <source_code>
+    ```
+assistant_prompt: |    
+    Bug Description:
+    <prediction>
+template_vars:
+    - source_code
+
+past_messages:
+    - role: system
+      inputs: 
+        language: python
+    - role: user
+      inputs:
+        source_code: |
+            def sum_numbers(a, b):
+                return a * b
+    - role: assistant
+      inputs:
+        prediction: |
+            The function should return the sum of a and b, not their product.
+
+settings:    
+    engine: text-davinci-003
