@@ -36,7 +36,7 @@ class TurboPrompt:
         self._add_prompt("assistant", self.assistant_prompt.build(**kwargs))
 
     def build(self) -> Dict[str, str]:
-        return [{prompt["type"]: prompt["prompt"]} for prompt in self.prompts]
+        return [{"role": prompt["type"], "content": prompt["prompt"]} for prompt in self.prompts]
 
     def _add_prompt(self, prompt_type: str, prompt: DynamicPrompt):
         self.prompts.append({"type": prompt_type, "prompt": prompt})

@@ -14,10 +14,10 @@ def test_turbo_all_none():
     
     text = tp.build()
     expected = [
-        {"system": "You are an AI system that fixes text"},
-        {"user": "fix this text: she no went to the store"},
-        {"assistant": "fixed text: she did not go to the store"},
-        {"user": "fix this text: he is no smart"},
+        {"role": "system", "content": "You are an AI system that fixes text"},
+        {"role": "user", "content": "fix this text: she no went to the store"},
+        {"role": "assistant", "content": "fixed text: she did not go to the store"},
+        {"role": "user", "content": "fix this text: he is no smart"},
     ]
 
     assert text == expected
@@ -40,9 +40,9 @@ def test_turbo():
     assert len(tp.prompts) == 3
     text = tp.build()
     expected = [
-        {"system": "You are a chatbot"},
-        {"user": "Qui-gon: may the force"},
-        {"assistant": "answer: be with you"},
+        {"role": "system", "content": "You are a chatbot"},
+        {"role": "user", "content": "Qui-gon: may the force"},
+        {"role": "assistant", "content": "answer: be with you"},
     ]
     assert text == expected
 
@@ -56,9 +56,9 @@ def test_from_file():
 
     text = tp.build()
     expected = [
-        {"system": "You are a chatbot\n"},
-        {"user": "Qui-gon: Hey!\n"},
-        {"assistant": "answer: Hello Jonatas! How can I help you today?\n"},
+        {"role": "system", "content": "You are a chatbot\n"},
+        {"role": "user", "content": "Qui-gon: Hey!\n"},
+        {"role": "assistant", "content": "answer: Hello Jonatas! How can I help you today?\n"},
     ]
     assert text == expected
 
@@ -80,7 +80,7 @@ def test_from_file_with_past_messages():
     assert tp.prompts[2]["prompt"] == "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n"
 
     # Add a new user message with a different code
-    source_code = "def multiply_numbers(a, b):\n    return a * b\n"
+    source_code = "def multiply_numbers(a, b):\n    return a - b\n"
     tp.add_user_message(source_code=source_code)
 
     # Check the built prompts
@@ -88,10 +88,10 @@ def test_from_file_with_past_messages():
         "You are an AI that fixes code issues:\nLanguage: python\n",
         "Code to check:\n```\ndef sum_numbers(a, b):\n    return a * b\n\n```\n",
         "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n",
-        "Code to check:\n```\ndef multiply_numbers(a, b):\n    return a * b\n\n```\n",
+        "Code to check:\n```\ndef multiply_numbers(a, b):\n    return a - b\n\n```\n",
     ]
     text = tp.build()
-    assert [msg[role] for msg in text for role in msg] == expected_messages
+    assert [msg["content"] for msg in text] == expected_messages
 
     # Check the title and settings attributes
     assert tp.title == "Turbo prompt with past messages"
