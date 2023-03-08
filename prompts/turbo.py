@@ -38,11 +38,8 @@ class TurboPrompt:
     def build(self) -> Dict[str, str]:
         return [{prompt["type"]: prompt["prompt"]} for prompt in self.prompts]
 
-    def _add_prompt(self, prompt_type: str, prompt: Optional[Union[str, DynamicPrompt]] = None):
-        if prompt is not None:
-            self.prompts.append({"type": prompt_type, "prompt": prompt})
-        else:
-            raise ValueError("Prompt must be provided.")
+    def _add_prompt(self, prompt_type: str, prompt: DynamicPrompt):
+        self.prompts.append({"type": prompt_type, "prompt": prompt})
 
     @classmethod
     def from_yaml(cls, file_path: str):
