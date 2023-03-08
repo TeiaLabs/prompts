@@ -1,0 +1,16 @@
+title: Turbo prompt
+system_prompt: |
+    You are a chatbot
+user_prompt: |
+    <name>: <message>
+assistant_prompt: |
+    answer: <message>
+template_vars:
+    - input_sentence
+    - name
+    - message
+settings:
+    top-k: 1
+    temperature: 0.15
+    engine: text-davinci-003
+    max_tokens: 32
