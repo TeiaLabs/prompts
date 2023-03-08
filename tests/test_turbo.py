@@ -4,7 +4,7 @@ from prompts import DynamicPrompt
 
 def test_turbo_all_none():
     tp = TurboPrompt()
-    assert len(tp.prompts) == 0    
+    assert len(tp.prompts) == 0
     tp.add_system_message(message="You are an AI system that fixes text")
     tp.add_user_message(message="fix this text: she no went to the store")
     tp.add_assistant_message(message="fixed text: she did not go to the store")
@@ -33,7 +33,7 @@ def test_turbo():
         user_prompt=user,
         assistant_prompt=assistant,
     )
-    assert len(tp.prompts) == 0    
+    assert len(tp.prompts) == 0
     tp.add_system_message(message="You are a chatbot")
     tp.add_user_message(name="Qui-gon", message="may the force")
     tp.add_assistant_message(message="be with you")
@@ -49,11 +49,11 @@ def test_turbo():
 
 def test_from_file():
     tp = TurboPrompt.from_yaml("samples/turbo.prompt.yaml")
-        
+
     tp.add_system_message()
     tp.add_user_message(name="Qui-gon", message="Hey!")
     tp.add_assistant_message(message="Hello Jonatas! How can I help you today?")
-    
+
     text = tp.build()
     expected = [
         {"system": "You are a chatbot\n"},
@@ -61,7 +61,7 @@ def test_from_file():
         {"assistant": "answer: Hello Jonatas! How can I help you today?\n"},
     ]
     assert text == expected
-    
+
     assert tp.title == "Turbo prompt"
     assert tp.settings == {
         "top-k": 1,
