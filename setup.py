@@ -14,6 +14,7 @@ def read_multiline_as_list(file_path: Path | str) -> list[str]:
             contents.pop()
         return contents
 
+
 def get_version() -> str:
     raw_git_cmd = "git describe --tags"
     git_cmd = shlex.split(raw_git_cmd)
@@ -23,6 +24,7 @@ def get_version() -> str:
     ret_code = git.wait()
     assert ret_code == 0, f"{raw_git_cmd!r} failed with exit code {ret_code}."
     return cut.decode().strip()
+
 
 requirements = read_multiline_as_list("requirements.txt")
 
