@@ -1,12 +1,12 @@
-# Prompt builder
+# AIPrompts
 
 This is a simple prompt builder for OpenAI models. Easy to use and to modify.
 
 ## Install
 
-`pip install AIPrompts@git+https://github.com/TeiaLabs/prompts.git`
-
 `pip install AIPrompts`
+
+`pip install AIPrompts@git+https://github.com/TeiaLabs/prompts.git@v0.1.2`
 
 ## Dynamic prompts
 
