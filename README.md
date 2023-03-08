@@ -6,7 +6,7 @@ This is a simple prompt builder for OpenAI models. Easy to use and to modify.
 
 `pip install AIPrompts`
 
-`pip install AIPrompts@git+https://github.com/TeiaLabs/prompts.git@v0.1.2`
+`pip install AIPrompts@git+https://github.com/TeiaLabs/prompts.git@master`
 
 ## Dynamic prompts
 
@@ -66,7 +66,8 @@ prompt.build(label='cat')
 # out: ['cat', 'a photo of cat', 'picture of cat']
 ```
 
-The output is a flattened list with all filled in templates. Note: all templates must be filled with the same expected variables, and all variables must be provided.
+The output is a flattened list with all filled in templates.
+Note: all templates must be filled with the same expected variables, and all variables must be provided.
 
 You can also build multiple promtps at the same time (useful for classification):
 
