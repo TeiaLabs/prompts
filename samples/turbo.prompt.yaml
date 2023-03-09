@@ -1,0 +1,16 @@
+title: Turbo prompt
+system_prompt: |
+    You are a chatbot
+user_prompt: |
+    <name>: <message>
+assistant_prompt: |
+    answer: <message>
+template_vars:
+    - input_sentence
+    - name
+    - message
+settings:
+    top-k: 1
+    temperature: 0.15
+    engine: gpt-3.5-turbo
+    max_tokens: 32
