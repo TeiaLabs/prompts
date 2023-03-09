@@ -80,11 +80,11 @@ class TurboPrompt:
 
             role = message.get("role")
             inputs = message.get("inputs", {})
-            if role == 'user':
+            if role == "user":
                 turbo_prompt.add_user_message(**inputs)
-            if role == 'assistant':
+            if role == "assistant":
                 turbo_prompt.add_assistant_message(**inputs)
-            if role == 'system':
+            if role == "system":
                 turbo_prompt.add_system_message(**inputs)
 
         return turbo_prompt
