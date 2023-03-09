@@ -14,18 +14,27 @@ class TurboPrompt:
     ):
         if system_prompt is None:
             system_prompt = DynamicPrompt("<message>")
+        elif isinstance(system_prompt, str):
+            system_prompt = DynamicPrompt(system_prompt)
+
         if user_prompt is None:
             user_prompt = DynamicPrompt("<message>")
+        elif isinstance(user_prompt, str):
+            user_prompt = DynamicPrompt(user_prompt)
+
         if assistant_prompt is None:
             assistant_prompt = DynamicPrompt("<message>")
+        elif isinstance(assistant_prompt, str):
+            assistant_prompt = DynamicPrompt(assistant_prompt)
+
         self.system_prompt = system_prompt
         self.user_prompt = user_prompt
         self.assistant_prompt = assistant_prompt
         self.settings = settings
         self.title = title
-        
+
         self.prompts = []
-    
+
     def add_user_message(self, **kwargs):
         self._add_prompt("user", self.user_prompt.build(**kwargs))
 
@@ -35,10 +44,13 @@ class TurboPrompt:
     def add_assistant_message(self, **kwargs):
         self._add_prompt("assistant", self.assistant_prompt.build(**kwargs))
 
-    def build(self) -> Dict[str, str]:
-        return [{"role": prompt["type"], "content": prompt["prompt"]} for prompt in self.prompts]
+    def build(self, **_) -> list[Dict[str, str]]:
+        return [
+            {"role": prompt["type"], "content": prompt["prompt"]}
+            for prompt in self.prompts
+        ]
 
-    def _add_prompt(self, prompt_type: str, prompt: DynamicPrompt):
+    def _add_prompt(self, prompt_type: str, prompt: str):
         self.prompts.append({"type": prompt_type, "prompt": prompt})
 
     @classmethod
