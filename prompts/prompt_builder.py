@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from .exceptions import (
     MissingArgumentError,
@@ -7,6 +7,9 @@ from .exceptions import (
     VariableNotInPromptError,
 )
 from .utils import load_yaml
+
+if TYPE_CHECKING:
+    from .turbo import TurboPrompt
 
 
 class BasePrompt:
@@ -107,6 +110,11 @@ class DynamicPrompt(BasePrompt):
 
     def build(self, **kwargs):
         return self.set_prompt_values(**kwargs)
+
+    def to_turbo(self) -> TurboPrompt:
+        from .turbo import TurboPrompt
+
+        return TurboPrompt(system_prompt=self)
 
 
 class Prompt(BasePrompt):
