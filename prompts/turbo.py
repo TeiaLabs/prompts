@@ -1,5 +1,7 @@
+from typing import Dict, List, Optional, Union
+
 import yaml
-from typing import Optional, List, Dict, Union
+
 from .prompt_builder import DynamicPrompt
 
 
