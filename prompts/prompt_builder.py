@@ -111,7 +111,7 @@ class DynamicPrompt(BasePrompt):
     def build(self, **kwargs):
         return self.set_prompt_values(**kwargs)
 
-    def to_turbo(self) -> TurboPrompt:
+    def to_turbo(self) -> "TurboPrompt":
         from .turbo import TurboPrompt
 
         return TurboPrompt(system_prompt=self)
