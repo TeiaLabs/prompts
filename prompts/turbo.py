@@ -56,7 +56,7 @@ class TurboPrompt:
         self.prompts.append({"type": prompt_type, "prompt": prompt})
 
     @classmethod
-    def from_yaml(cls, file_path: str):
+    def from_file(cls, file_path: str):
         with open(file_path, "r") as f:
             prompt_data = yaml.safe_load(f)
         system_prompt = DynamicPrompt(
