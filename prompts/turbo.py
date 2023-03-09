@@ -75,7 +75,7 @@ class TurboPrompt:
             title=prompt_data["title"],
             settings=prompt_data["settings"],
         )
-        
+
         for message in prompt_data.get("past_messages", []):
 
             role = message.get("role")
@@ -109,7 +109,9 @@ class TurboPrompt:
         if user_template is not None:
             user_prompt = DynamicPrompt(user_template, user_template_vars)
         if assistant_template is not None:
-            assistant_prompt = DynamicPrompt(assistant_template, assistant_template_vars)
+            assistant_prompt = DynamicPrompt(
+                assistant_template, assistant_template_vars
+            )
         return cls(
             system_prompt=system_prompt,
             user_prompt=user_prompt,

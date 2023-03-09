@@ -83,7 +83,7 @@ class BasePrompt:
 class DynamicPrompt(BasePrompt):
     """
     DynamicPrompt.
-    
+
     >>> template = "this is a <dog>"
     >>> template_vars = ['dog']
     >>> prompt = DynamicPrompt(template, template_vars)
