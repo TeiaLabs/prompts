@@ -1,5 +1,5 @@
-from prompts.turbo import TurboPrompt
 from prompts import DynamicPrompt
+from prompts.turbo import TurboPrompt
 
 
 def test_turbo_all_none():
@@ -48,7 +48,7 @@ def test_turbo():
 
 
 def test_from_file():
-    tp = TurboPrompt.from_yaml("samples/turbo.prompt.yaml")
+    tp = TurboPrompt.from_file("samples/turbo.prompt.yaml")
 
     tp.add_system_message()
     tp.add_user_message(name="Qui-gon", message="Hey!")
@@ -72,7 +72,7 @@ def test_from_file():
 
 
 def test_from_file_with_past_messages():
-    tp = TurboPrompt.from_yaml("samples/sample.past.yaml")
+    tp = TurboPrompt.from_file("samples/sample.past.yaml")
 
     # Check the content of the past messages
     assert tp.prompts[0]["prompt"] == "You are an AI that fixes code issues:\nLanguage: python\n"
