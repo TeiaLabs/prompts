@@ -29,28 +29,60 @@ class TurboPrompt:
         elif isinstance(assistant_prompt, str):
             assistant_prompt = DynamicPrompt(assistant_prompt)
 
-        self.system_prompt = system_prompt
-        self.user_prompt = user_prompt
-        self.assistant_prompt = assistant_prompt
+        self.system_prompt = {"default": system_prompt}
+        self.user_prompt = {"default": user_prompt}
+        self.assistant_prompt = {"default": assistant_prompt}
         self.settings = settings
         self.title = title
 
         self.prompts = []
 
-    def add_user_message(self, **kwargs):
-        self._add_prompt("user", self.user_prompt.build(**kwargs))
+    def add_user_template(self, prompt_name: str, template: str | DynamicPrompt):
+        if isinstance(template, str):
+            template = DynamicPrompt(template)
 
-    def add_system_message(self, **kwargs):
-        self._add_prompt("system", self.system_prompt.build(**kwargs))
+        self.user_prompt[prompt_name] = template
 
-    def add_assistant_message(self, **kwargs):
-        self._add_prompt("assistant", self.assistant_prompt.build(**kwargs))
+    def add_system_template(self, prompt_name: str, template: str | DynamicPrompt):
+        if isinstance(template, str):
+            template = DynamicPrompt(template)
+
+        self.system_prompt[prompt_name] = template
+
+    def add_assistant_template(self, prompt_name: str, template: str | DynamicPrompt):
+        if isinstance(template, str):
+            template = DynamicPrompt(template)
+
+        self.assistant_prompt[prompt_name] = template
+
+    def add_user_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
+
+        self._add_prompt("user", self.user_prompt[prompt_name].build(**kwargs))
+
+    def add_system_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
+
+        self._add_prompt("system", self.system_prompt[prompt_name].build(**kwargs))
+
+    def add_assistant_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
+
+        self._add_prompt(
+            "assistant", self.assistant_prompt[prompt_name].build(**kwargs)
+        )
 
     def build(self, **_) -> list[Dict[str, str]]:
         return [
             {"role": prompt["type"], "content": prompt["prompt"]}
             for prompt in self.prompts
         ]
+
+    def clear(self):
+        self.prompts.clear()
 
     def _add_prompt(self, prompt_type: str, prompt: str):
         self.prompts.append({"type": prompt_type, "prompt": prompt})
@@ -121,17 +153,20 @@ class TurboPrompt:
         )
 
     def to_dynamic(self) -> DynamicPrompt:
-        prompt_string = self.system_prompt.prompt
-        template_vars = set(self.system_prompt.template_vars or [])
+        for prompt in self.system_prompt.values():
+            prompt_string = prompt.prompt
+            template_vars = set(prompt.template_vars or [])
 
-        prompt_string += self.user_prompt.prompt
-        template_vars.update(self.user_prompt.template_vars or [])
+        for prompt in self.user_prompt.values():
+            prompt_string += prompt.prompt
+            template_vars.update(prompt.template_vars or [])
 
-        prompt_string += self.assistant_prompt.prompt
-        template_vars.update(self.assistant_prompt.template_vars or [])
+        for prompt in self.assistant_prompt.values():
+            prompt_string += prompt.prompt
+            template_vars.update(prompt.template_vars or [])
 
         return DynamicPrompt(
             title=self.title,
             prompt=prompt_string,
-            template_vars=list(template_vars),
+            template_vars=list(template_vars) or None,
         )
