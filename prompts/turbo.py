@@ -150,17 +150,20 @@ class TurboPrompt:
         )
 
     def to_dynamic(self) -> DynamicPrompt:
-        prompt_string = self.system_prompt.prompt
-        template_vars = set(self.system_prompt.template_vars or [])
+        for prompt in self.system_prompt.values():
+            prompt_string = prompt.prompt
+            template_vars = set(prompt.template_vars or [])
 
-        prompt_string += self.user_prompt.prompt
-        template_vars.update(self.user_prompt.template_vars or [])
+        for prompt in self.user_prompt.values():
+            prompt_string += prompt.prompt
+            template_vars.update(prompt.template_vars or [])
 
-        prompt_string += self.assistant_prompt.prompt
-        template_vars.update(self.assistant_prompt.template_vars or [])
+        for prompt in self.assistant_prompt.values():
+            prompt_string += prompt.prompt
+            template_vars.update(prompt.template_vars or [])
 
         return DynamicPrompt(
             title=self.title,
             prompt=prompt_string,
-            template_vars=list(template_vars),
+            template_vars=list(template_vars) or None,
         )
