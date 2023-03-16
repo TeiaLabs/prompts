@@ -29,22 +29,33 @@ class TurboPrompt:
         elif isinstance(assistant_prompt, str):
             assistant_prompt = DynamicPrompt(assistant_prompt)
 
-        self.system_prompt = system_prompt
-        self.user_prompt = user_prompt
-        self.assistant_prompt = assistant_prompt
+        self.system_prompt = {"default": system_prompt}
+        self.user_prompt = {"default": user_prompt}
+        self.assistant_prompt = {"default": assistant_prompt}
         self.settings = settings
         self.title = title
 
         self.prompts = []
 
-    def add_user_message(self, **kwargs):
-        self._add_prompt("user", self.user_prompt.build(**kwargs))
+    def add_user_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
 
-    def add_system_message(self, **kwargs):
-        self._add_prompt("system", self.system_prompt.build(**kwargs))
+        self._add_prompt("user", self.user_prompt[prompt_name].build(**kwargs))
 
-    def add_assistant_message(self, **kwargs):
-        self._add_prompt("assistant", self.assistant_prompt.build(**kwargs))
+    def add_system_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
+
+        self._add_prompt("system", self.system_prompt[prompt_name].build(**kwargs))
+
+    def add_assistant_message(self, prompt_name: str | None = None, **kwargs):
+        if prompt_name is None:
+            prompt_name = "default"
+
+        self._add_prompt(
+            "assistant", self.assistant_prompt[prompt_name].build(**kwargs)
+        )
 
     def build(self, **_) -> list[Dict[str, str]]:
         return [
