@@ -81,6 +81,9 @@ class TurboPrompt:
             for prompt in self.prompts
         ]
 
+    def clear(self):
+        self.prompts.clear()
+
     def _add_prompt(self, prompt_type: str, prompt: str):
         self.prompts.append({"type": prompt_type, "prompt": prompt})
 
