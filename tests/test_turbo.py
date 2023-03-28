@@ -64,7 +64,6 @@ def test_from_file():
 
     assert tp.title == "Turbo prompt"
     assert tp.settings == {
-        "top-k": 1,
         "temperature": 0.15,
         "engine": "gpt-3.5-turbo",
         "max_tokens": 32,
