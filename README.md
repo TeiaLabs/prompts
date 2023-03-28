@@ -50,7 +50,7 @@ class MyPrompt(BasePrompt):
 
 ## Ensembling prompts
 
-To ensemble multiple prompts, you can use the `EnsemblePrompt` class:
+To ensemble multiple prompts, you can use the `PromptEnsemble` class:
 
 ```python
 templates = [
