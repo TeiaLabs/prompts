@@ -140,25 +140,28 @@ class TurboPrompt:
         else:
             raise ValueError("assistant_prompt must be a string or a list of strings/prompts")
         
-        if prompt_schema.initial_template_data is None:
-            return turbo_prompt
-        
-        for hist in prompt_schema.initial_template_data:
-            # initial_template_data content is the role, content, name object already built
-            if isinstance(hist, HistoryContentItem):
-                turbo_prompt.add_raw_content(hist)
-                continue
-                        
-            if hist.role == "system":
-                    turbo_prompt.add_system_message(prompt_name=hist.name, **hist.inputs)                    
-            elif hist.role == "user":
-                    turbo_prompt.add_user_message(prompt_name=hist.name, **hist.inputs)
-            elif hist.role == "assistant":
-                    turbo_prompt.add_assistant_message(prompt_name=hist.name, **hist.inputs)
-            else:
-                raise ValueError("Invalid role in initial_template_data: {}".format(hist.role))
-
+        cls.add_initial_template_data(turbo_prompt, prompt_schema.initial_template_data)
         return turbo_prompt
+
+    @staticmethod
+    def add_initial_template_data(prompt, initial_template_data):
+        if initial_template_data is None:
+            return
+        
+        for hist in initial_template_data:
+            if isinstance(hist, HistoryContentItem):
+                prompt.add_raw_content(hist)
+                continue
+
+            if hist.role == "system":
+                prompt.add_system_message(prompt_name=hist.name, **hist.inputs)
+            elif hist.role == "user":
+                prompt.add_user_message(prompt_name=hist.name, **hist.inputs)
+            elif hist.role == "assistant":
+                prompt.add_assistant_message(prompt_name=hist.name, **hist.inputs)
+            else:
+                raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
+
 
     @classmethod
     def from_file(cls, file_path: str):

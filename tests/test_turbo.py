@@ -14,10 +14,10 @@ def test_turbo_all_none():
     
     text = tp.build()
     expected = [
-        {"role": "system", "content": "You are an AI system that fixes text"},
-        {"role": "user", "content": "fix this text: she no went to the store"},
-        {"role": "assistant", "content": "fixed text: she did not go to the store"},
-        {"role": "user", "content": "fix this text: he is no smart"},
+        {"role": "system",  "name": "default", "content": "You are an AI system that fixes text"},
+        {"role": "user", "name": "default", "content": "fix this text: she no went to the store"},
+        {"role": "assistant", "name": "default", "content": "fixed text: she did not go to the store"},
+        {"role": "user",  "name": "default", "content": "fix this text: he is no smart"},
     ]
 
     assert text == expected
@@ -40,9 +40,9 @@ def test_turbo():
     assert len(tp.prompts) == 3
     text = tp.build()
     expected = [
-        {"role": "system", "content": "You are a chatbot"},
-        {"role": "user", "content": "Qui-gon: may the force"},
-        {"role": "assistant", "content": "answer: be with you"},
+        {"role": "system",  "name": "default", "content": "You are a chatbot"},
+        {"role": "user",  "name": "default", "content": "Qui-gon: may the force"},
+        {"role": "assistant",  "name": "default", "content": "answer: be with you"},
     ]
     assert text == expected
 
@@ -56,9 +56,9 @@ def test_from_file():
 
     text = tp.build()
     expected = [
-        {"role": "system", "content": "You are a chatbot\n"},
-        {"role": "user", "content": "Qui-gon: Hey!\n"},
-        {"role": "assistant", "content": "answer: Hello Jonatas! How can I help you today?\n"},
+        {"role": "system", "name": "default", "content": "You are a chatbot\n"},
+        {"role": "user",  "name": "default", "content": "Qui-gon: Hey!\n"},
+        {"role": "assistant",  "name": "default", "content": "answer: Hello Jonatas! How can I help you today?\n"},
     ]
     assert text == expected
 
