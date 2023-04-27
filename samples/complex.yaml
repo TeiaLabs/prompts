@@ -1,0 +1,38 @@
+title: Turbo prompt with past messages
+system_prompt:
+    - name: sys_prompt
+      prompt: |
+         You are an AI that fixes code issues:
+         Language: <language>
+
+user_prompt: 
+    - name: default
+      prompt: | 
+        Code to check:
+        ``
+        <source_code>
+        ``
+assistant_prompt:
+    - name: assistant_super_prompt
+      prompt: |
+        Bug Description:
+        <prediction>
+
+history:
+    - role: system
+      name: sys_prompt
+      inputs: 
+        language: python
+    - role: user
+      inputs:
+        source_code: |
+            def sum_numbers(a, b):
+                return a * b
+    - role: assistant
+      name: assistant_super_prompt
+      inputs:
+        prediction: |
+            The function should return the sum of a and b, not their product.
+
+settings:    
+    engine: gpt-3.5-turbo

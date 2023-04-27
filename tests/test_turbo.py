@@ -70,7 +70,7 @@ def test_from_file():
     }
 
 
-def test_from_file_with_past_messages():
+def test_from_file_with_history():
     tp = TurboPrompt.from_file("samples/sample.past.yaml")
 
     # Check the content of the past messages
@@ -95,3 +95,25 @@ def test_from_file_with_past_messages():
     # Check the title and settings attributes
     assert tp.title == "Turbo prompt with past messages"
     assert tp.settings == {"engine": "gpt-3.5-turbo"}
+
+
+def test_a_from_settings():
+    tp = TurboPrompt.from_file("samples/complex.yaml")
+
+    print(tp.build())
+    
+    input()
+    tp = TurboPrompt.from_settings(
+        system_template="You are an AI",
+        user_template="Q:<message>",
+        assistant_template="A:",
+        settings=None,
+        title=None,
+        history=None,
+    )
+
+    print(tp)
+    input()
+    tp.add_system_message()
+    print(tp.build())
+    
