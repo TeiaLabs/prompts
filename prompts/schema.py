@@ -31,10 +31,12 @@ class OpenAIModelSettings(BaseModel):
 
 
 class TurboPromptSchema(BaseModel):
-    title: Optional[str]
+    name: str
+    description: Optional[str]
+    title: Optional[str] # backwards compat
     system_prompt: list[PromptItem] | str
     user_prompt: list[PromptItem] | str
     assistant_prompt: list[PromptItem] | str
 
-    history: Optional[list[HistoryInputItem] | list[HistoryContentItem]] = None
+    initial_template_data: Optional[list[HistoryInputItem] | list[HistoryContentItem]] = None
     settings: Optional[OpenAIModelSettings]

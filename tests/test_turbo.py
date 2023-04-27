@@ -62,21 +62,23 @@ def test_from_file():
     ]
     assert text == expected
 
-    assert tp.title == "Turbo prompt"
-    assert tp.settings == {
+    assert tp.name == "basic_turbo_prompt"
+    assert tp.description == "Basic turbo prompt example"
+    from prompts.schema import OpenAIModelSettings
+    assert tp.settings == OpenAIModelSettings(**{
         "temperature": 0.15,
         "engine": "gpt-3.5-turbo",
         "max_tokens": 32,
-    }
+    })
 
 
-def test_from_file_with_history():
+def test_from_file_with_initial_template_data():
     tp = TurboPrompt.from_file("samples/sample.past.yaml")
 
     # Check the content of the past messages
-    assert tp.prompts[0]["prompt"] == "You are an AI that fixes code issues:\nLanguage: python\n"
-    assert tp.prompts[1]["prompt"] == "Code to check:\n```\ndef sum_numbers(a, b):\n    return a * b\n\n```\n"
-    assert tp.prompts[2]["prompt"] == "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n"
+    assert tp.prompts[0]["content"] == "You are an AI that fixes code issues:\nLanguage: python\n"
+    assert tp.prompts[1]["content"] == "Code to check:\n```\ndef sum_numbers(a, b):\n    return a * b\n\n```\n"
+    assert tp.prompts[2]["content"] == "Bug Description:\nThe function should return the sum of a and b, not their product.\n\n"
 
     # Add a new user message with a different code
     source_code = "def multiply_numbers(a, b):\n    return a - b\n"
@@ -93,27 +95,38 @@ def test_from_file_with_history():
     assert [msg["content"] for msg in text] == expected_messages
 
     # Check the title and settings attributes
-    assert tp.title == "Turbo prompt with past messages"
-    assert tp.settings == {"engine": "gpt-3.5-turbo"}
+    assert tp.name == "turbo_prompt_with_examples"
+    assert tp.description == "Example of turbo prompt with initial_template_data (few-shot)"
+    assert tp.settings.engine == "gpt-3.5-turbo"
 
 
 def test_a_from_settings():
     tp = TurboPrompt.from_file("samples/complex.yaml")
+    built = tp.build()
+    assert isinstance(built, list)
+    assert isinstance(built[0], dict)
+    assert len(built) == 3
+    assert built[-1]["role"] == "assistant"    
 
-    print(tp.build())
-    
-    input()
     tp = TurboPrompt.from_settings(
+        name="turbo_prompt_inline",
         system_template="You are an AI",
         user_template="Q:<message>",
         assistant_template="A:",
         settings=None,
         title=None,
-        history=None,
+        initial_template_data=[{
+            "role": "system",
+            "content": "hey",
+            "name": "default",
+        }],
     )
 
-    print(tp)
-    input()
-    tp.add_system_message()
-    print(tp.build())
-    
+    content = tp.build()
+    assert len(content) == 1
+    assert content[0] == {
+        "role": "system", 
+        "content": "hey", 
+        "name": "default",
+    }
+

@@ -1,5 +1,6 @@
 ---
 title: Sample prompt
+name: sample
 prompt: |
     Fix and improve writing of the sentence below:
     <input_sentence>

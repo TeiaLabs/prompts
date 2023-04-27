@@ -15,6 +15,8 @@ class TurboPrompt:
         user_prompt: Optional[Union[str, DynamicPrompt]] = None,
         assistant_prompt: Optional[Union[str, DynamicPrompt]] = None,
         settings: Optional[Dict] = None,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
         title: Optional[str] = None,
     ):
         if system_prompt is None:
@@ -38,6 +40,8 @@ class TurboPrompt:
 
         self.settings = settings
         self.title = title
+        self.name = name
+        self.description = description
 
         self.prompts = []
 
@@ -63,25 +67,25 @@ class TurboPrompt:
         if prompt_name is None:
             prompt_name = "default"
 
-        self._add_prompt("user", self.user_prompt[prompt_name].build(**kwargs))
+        self._add_prompt("user", self.user_prompt[prompt_name].build(**kwargs), name=prompt_name)
 
     def add_system_message(self, prompt_name: str | None = None, **kwargs):
         if prompt_name is None:
             prompt_name = "default"
 
-        self._add_prompt("system", self.system_prompt[prompt_name].build(**kwargs))
+        self._add_prompt("system", self.system_prompt[prompt_name].build(**kwargs), name=prompt_name)
 
     def add_assistant_message(self, prompt_name: str | None = None, **kwargs):
         if prompt_name is None:
             prompt_name = "default"
 
         self._add_prompt(
-            "assistant", self.assistant_prompt[prompt_name].build(**kwargs)
+            "assistant", self.assistant_prompt[prompt_name].build(**kwargs), name=prompt_name,
         )
 
     def build(self, **_) -> list[Dict[str, str]]:
         return [
-            {"role": prompt["type"], "content": prompt["prompt"]}
+            {"role": prompt["role"], "name": prompt["name"], "content": prompt["content"]}
             for prompt in self.prompts
         ]
 
@@ -93,13 +97,18 @@ class TurboPrompt:
     def clear(self):
         self.prompts.clear()
 
-    def _add_prompt(self, prompt_type: str, prompt: str):
-        self.prompts.append({"type": prompt_type, "prompt": prompt})
+    def _add_prompt(self, prompt_type: str, prompt: str, name: str = "default"):
+        self.prompts.append({"role": prompt_type, "name": name, "content": prompt})
 
     @classmethod
     def from_turbo_schema(cls, prompt_schema: TurboPromptSchema):
 
-        turbo_prompt = cls()
+        turbo_prompt = cls(
+            title=prompt_schema.title,
+            name=prompt_schema.name,
+            description=prompt_schema.description,
+            settings=prompt_schema.settings,
+        )
 
         if isinstance(prompt_schema.system_prompt, str):
             turbo_prompt.add_system_template(prompt_name="default", template=prompt_schema.system_prompt)
@@ -131,11 +140,11 @@ class TurboPrompt:
         else:
             raise ValueError("assistant_prompt must be a string or a list of strings/prompts")
         
-        if prompt_schema.history is None:
+        if prompt_schema.initial_template_data is None:
             return turbo_prompt
         
-        for hist in prompt_schema.history:
-            # History content is the role, content, name object already built
+        for hist in prompt_schema.initial_template_data:
+            # initial_template_data content is the role, content, name object already built
             if isinstance(hist, HistoryContentItem):
                 turbo_prompt.add_raw_content(hist)
                 continue
@@ -147,7 +156,7 @@ class TurboPrompt:
             elif hist.role == "assistant":
                     turbo_prompt.add_assistant_message(prompt_name=hist.name, **hist.inputs)
             else:
-                raise ValueError("Invalid role in history: {}".format(hist.role))
+                raise ValueError("Invalid role in initial_template_data: {}".format(hist.role))
 
         return turbo_prompt
 
@@ -162,20 +171,24 @@ class TurboPrompt:
     @classmethod
     def from_settings(
         cls,
+        title: Optional[str] = None,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
         system_template: Optional[str] = None,
         user_template: Optional[str] = None,
         assistant_template: Optional[str] = None,
         settings: Optional[Dict] = None,
-        title: Optional[str] = None,
-        history: Optional[str] = None
-    ):        
+        initial_template_data: Optional[str] = None,
+    ):
         tbs = TurboPromptSchema(
+            name=name,
+            description=description,
             title=title,
             system_prompt=system_template,
             user_prompt=user_template,
             assistant_prompt=assistant_template,
-            history=history,
-            settings=settings
+            initial_template_data=initial_template_data,
+            settings=settings,
         )
         return cls.from_turbo_schema(tbs)
 

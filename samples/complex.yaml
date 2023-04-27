@@ -1,4 +1,5 @@
-title: Turbo prompt with past messages
+name: all_the_turbo_features
+description: Turbo prompt with past messages
 system_prompt:
     - name: sys_prompt
       prompt: |
@@ -18,7 +19,7 @@ assistant_prompt:
         Bug Description:
         <prediction>
 
-history:
+initial_template_data:
     - role: system
       name: sys_prompt
       inputs: 
@@ -33,6 +34,5 @@ history:
       inputs:
         prediction: |
             The function should return the sum of a and b, not their product.
-
 settings:    
     engine: gpt-3.5-turbo

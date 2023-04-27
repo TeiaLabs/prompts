@@ -1,4 +1,6 @@
-title: Turbo prompt
+name: basic_turbo_prompt
+description: |-
+    Basic turbo prompt example
 system_prompt: |
     You are a chatbot
 user_prompt: |
