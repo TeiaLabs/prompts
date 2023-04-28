@@ -21,9 +21,9 @@ class DynamicPrompt:
     def __init__(
         self,
         prompt: str,
-        name: str,
-        description: str,
         template_vars: Optional[list[str]] = None,
+        name: str | None = None,
+        description: str | None = None,
         settings: Optional[dict[str, str]] = None,
         title: Optional[str] = None,
     ):
