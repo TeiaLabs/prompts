@@ -18,9 +18,9 @@ TEMPLATE_TYPE = list[Template] | DynamicPrompt | str | None
 class TurboPrompt:
     def __init__(
         self,
-        system_prompt: TEMPLATE_TYPE = None,
-        user_prompt: TEMPLATE_TYPE = None,
-        assistant_prompt: TEMPLATE_TYPE = None,
+        system_templates: TEMPLATE_TYPE = None,
+        user_templates: TEMPLATE_TYPE = None,
+        assistant_templates: TEMPLATE_TYPE = None,
         settings: OpenAIModelSettings | dict | None = None,
         name: str = "",
         description: str | None = None,
@@ -29,9 +29,9 @@ class TurboPrompt:
         if isinstance(settings, dict):
             settings = OpenAIModelSettings(**settings)
 
-        self.system_prompt = self.__format_prompt_template(system_prompt)
-        self.user_prompt = self.__format_prompt_template(user_prompt)
-        self.assistant_prompt = self.__format_prompt_template(assistant_prompt)
+        self.system_prompt = self.__format_prompt_template(system_templates)
+        self.user_prompt = self.__format_prompt_template(user_templates)
+        self.assistant_prompt = self.__format_prompt_template(assistant_templates)
 
         self.settings: OpenAIModelSettings | None = settings
         self.name = name

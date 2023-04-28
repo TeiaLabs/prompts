@@ -49,7 +49,7 @@ class DynamicPrompt:
     def to_turbo(self) -> "TurboPrompt":
         from .turbo import TurboPrompt
 
-        return TurboPrompt(system_prompt=self)
+        return TurboPrompt(system_templates=self)
 
     @classmethod
     def from_file(cls, prompt_file: str) -> "DynamicPrompt":
