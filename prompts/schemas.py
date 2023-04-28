@@ -1,24 +1,10 @@
+from enum import Enum
 from typing import Optional
-from pydantic import BaseModel
+
+from pydantic import BaseModel, Field
 
 
-class PromptItem(BaseModel):
-    name: str
-    prompt: str
-
-
-class HistoryInputItem(BaseModel):
-    role: str
-    inputs: dict[str, str]
-    name: Optional[str] = None
-    
-
-class HistoryContentItem(BaseModel):
-    role: str
-    content: str
-    name: Optional[str] = "default"
-
-
+# ==== Generic classes ====
 class OpenAIModelSettings(BaseModel):
     engine: str
     max_tokens: int = 256
@@ -26,16 +12,58 @@ class OpenAIModelSettings(BaseModel):
     top_p: float = 1
     frequency_penalty: float = 0
     presence_penalty: float = 0
-    stop: Optional[list[str]] = None
+    stop: list[str] = Field(default_factory=list)
 
 
-class TurboPromptSchema(BaseModel):
+class PromptSchema(BaseModel):
+    # Prompt identification
     name: str
-    description: Optional[str]
-    title: Optional[str] # backwards compat
-    system_prompt: list[PromptItem] | str
-    user_prompt: list[PromptItem] | str
-    assistant_prompt: list[PromptItem] | str
+    description: str = ""
 
-    initial_template_data: Optional[list[HistoryInputItem] | list[HistoryContentItem]] = None
-    settings: Optional[OpenAIModelSettings]
+    # Engine settings
+    settings: OpenAIModelSettings
+
+    # Backwards compatibility
+    title: Optional[str]
+
+
+# ==== Dynamic classes ====
+class DynamicSchema(PromptSchema):
+    # Prompt initial config
+    initial_data: str | dict[str, str] = ""
+
+
+# ==== Turbo classes ====
+class Template(BaseModel):
+    name: str
+    template: str
+
+
+class PromptRole(str, Enum):
+    USER = "user"
+    SYSTEM = "system"
+    ASSISTANT = "assistant"
+
+
+class TemplateData(BaseModel):
+    name: str = "default"
+    role: PromptRole
+    inputs: dict[str, str]
+
+
+class TemplateContent(BaseModel):
+    name: str = "default"
+    role: PromptRole
+    content: str
+
+
+class TurboSchema(PromptSchema):
+    # Prompt templates
+    system_templates: list[Template] | str
+    user_templates: list[Template] | str
+    assistant_templates: list[Template] | str
+
+    # Prompt initial config
+    initial_template_data: list[TemplateData | TemplateContent] = Field(
+        default_factory=list
+    )
