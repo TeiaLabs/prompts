@@ -4,7 +4,8 @@ import yaml
 
 from .prompt_builder import DynamicPrompt
 from .schema import (
-    TurboPromptSchema, 
+    TurboPromptSchema,
+    PromptItem,
     HistoryContentItem,
 )
 
@@ -102,7 +103,6 @@ class TurboPrompt:
 
     @classmethod
     def from_turbo_schema(cls, prompt_schema: TurboPromptSchema):
-
         turbo_prompt = cls(
             title=prompt_schema.title,
             name=prompt_schema.name,
@@ -110,41 +110,31 @@ class TurboPrompt:
             settings=prompt_schema.settings,
         )
 
-        if isinstance(prompt_schema.system_prompt, str):
-            turbo_prompt.add_system_template(prompt_name="default", template=prompt_schema.system_prompt)
-        elif isinstance(prompt_schema.system_prompt, list):
-            if "default" in turbo_prompt.system_prompt:
-                turbo_prompt.system_prompt.pop("default")
-            for p in prompt_schema.system_prompt:
-                turbo_prompt.add_system_template(prompt_name=p.name, template=p.prompt)
-        else:
-            raise ValueError("system_prompt must be a string or a list of strings/prompts")
+        turbo_prompt.add_template(prompt_schema.system_prompt, type="system")
+        turbo_prompt.add_template(prompt_schema.user_prompt, type="user")
+        turbo_prompt.add_template(prompt_schema.assistant_prompt, type="assistant")
+        turbo_prompt.add_initial_template_data(turbo_prompt, prompt_schema.initial_template_data)
 
-        if isinstance(prompt_schema.user_prompt, str):
-            turbo_prompt.add_user_template(prompt_name="default", template=prompt_schema.user_prompt)
-        elif isinstance(prompt_schema.user_prompt, list):
-            if "default" in turbo_prompt.user_prompt:
-                turbo_prompt.user_prompt.pop("default")
-            for p in prompt_schema.user_prompt:
-                turbo_prompt.add_user_template(prompt_name=p.name, template=p.prompt)
-        else:
-            raise ValueError("user_prompt must be a string or a list of strings/prompts")
-
-        if isinstance(prompt_schema.assistant_prompt, str):
-            turbo_prompt.add_assistant_template(prompt_name="default", template=prompt_schema.assistant_prompt)
-        elif isinstance(prompt_schema.assistant_prompt, list):
-            if "default" in turbo_prompt.assistant_prompt:
-                turbo_prompt.assistant_prompt.pop("default")
-            for p in prompt_schema.assistant_prompt:
-                turbo_prompt.add_assistant_template(prompt_name=p.name, template=p.prompt)
-        else:
-            raise ValueError("assistant_prompt must be a string or a list of strings/prompts")
-        
-        cls.add_initial_template_data(turbo_prompt, prompt_schema.initial_template_data)
         return turbo_prompt
 
-    @staticmethod
-    def add_initial_template_data(prompt, initial_template_data):
+    def add_template(self, turbo_schema: list[PromptItem] | str, type="assistant"):
+        turbo_add_template_fn = {
+            'assistant': self.add_assistant_template,
+            'user': self.add_user_template,
+            'system': self.add_system_template,
+        }
+
+        if isinstance(turbo_schema, str):
+            turbo_add_template_fn[type](prompt_name="default", template=turbo_schema)
+        elif isinstance(turbo_schema, list):
+            if "default" in turbo_schema:
+                turbo_schema.remove("default")
+            for p in turbo_schema:
+                turbo_add_template_fn[type](prompt_name=p.name, template=p.prompt)
+        else:
+            raise ValueError(f"{type}_prompt must be a string or a list of strings/prompts")
+        
+    def add_initial_template_data(self, prompt, initial_template_data):
         if initial_template_data is None:
             return
         
@@ -161,7 +151,6 @@ class TurboPrompt:
                 prompt.add_assistant_message(prompt_name=hist.name, **hist.inputs)
             else:
                 raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
-
 
     @classmethod
     def from_file(cls, file_path: str):
