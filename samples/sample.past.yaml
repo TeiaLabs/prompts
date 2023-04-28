@@ -1,18 +1,16 @@
 name: turbo_prompt_with_examples
 description: Example of turbo prompt with initial_template_data (few-shot)
-system_prompt: |
+system_templates: |
     You are an AI that fixes code issues:
     Language: <language>
-user_prompt: |
+user_templates: |
     Code to check:
     ```
     <source_code>
     ```
-assistant_prompt: |    
+assistant_templates: |    
     Bug Description:
     <prediction>
-template_vars:
-    - source_code
 
 initial_template_data:
     - role: system

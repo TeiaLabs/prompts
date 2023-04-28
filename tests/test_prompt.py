@@ -1,12 +1,12 @@
 import pytest
 
-from prompts import BasePrompt, DynamicPrompt, exceptions
+from prompts import DynamicPrompt, exceptions
 
 
 class TestPrompt:
     
     template = 'a photo of a <img_label>'
-    template_vars = 'img_label'
+    template_vars = ['img_label']
 
     @staticmethod
     def test_prompt_from_file():
@@ -22,7 +22,7 @@ class TestPrompt:
         ))
         assert expected_prompt == prompt_str
 
-        settings = prompt.get_model_settings()
+        settings = prompt.settings
         assert isinstance(settings, dict)
         assert isinstance(settings['temperature'], float)
         assert settings['temperature'] == 0.15
@@ -33,13 +33,7 @@ class TestPrompt:
 
         prompt = DynamicPrompt(TestPrompt.template, TestPrompt.template_vars)
         filled_prompt = prompt.build(img_label='dog')
-        assert filled_prompt == 'a photo of a dog'
-
-    @staticmethod
-    def test_base_prompt():
-        # it has to throw exception because the build method is not implemented
-        with pytest.raises(exceptions.MissingArgumentError):
-            BasePrompt(TestPrompt.template, TestPrompt.template_vars)        
+        assert filled_prompt == 'a photo of a dog'      
 
     @staticmethod
     def test_str_prompt_without_vars():
@@ -52,7 +46,6 @@ class TestPrompt:
 
     @staticmethod
     def test_strict_mode():
-
         prompt = DynamicPrompt(TestPrompt.template, TestPrompt.template_vars)
         filled_prompt = prompt.build(
             strict=False, img_label='dog', animal='mamal')

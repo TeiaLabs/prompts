@@ -1,21 +1,21 @@
 name: all_the_turbo_features
 description: Turbo prompt with past messages
-system_prompt:
+system_templates:
     - name: sys_prompt
-      prompt: |
+      template: |
          You are an AI that fixes code issues:
          Language: <language>
 
-user_prompt: 
+user_templates: 
     - name: default
-      prompt: | 
+      template: | 
         Code to check:
         ``
         <source_code>
         ``
-assistant_prompt:
+assistant_templates:
     - name: assistant_super_prompt
-      prompt: |
+      template: |
         Bug Description:
         <prediction>
 

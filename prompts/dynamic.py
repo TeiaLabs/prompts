@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from .exceptions import UndefinedVariableError
+from .schemas import DynamicSchema
 from .utils import load_yaml
 
 if TYPE_CHECKING:
@@ -55,14 +56,8 @@ class DynamicPrompt:
     @classmethod
     def from_file(cls, prompt_file: str) -> "DynamicPrompt":
         prompt = load_yaml(prompt_file)
-        settings = prompt.get("settings", None)
-        return cls(
-            name=prompt["name"],
-            description=prompt["description"],
-            prompt=prompt["prompt"],
-            template_vars=prompt.get("template_vars", None),
-            settings=settings,
-        )
+        schema = DynamicSchema(**prompt)
+        return cls(**schema.dict())
 
     def __repr__(self) -> str:
         return (

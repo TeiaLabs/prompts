@@ -1,5 +1,10 @@
-from prompts import DynamicPrompt
-from prompts.turbo import TurboPrompt
+from prompts import (
+    DynamicPrompt,
+    OpenAIModelSettings,
+    PromptRole,
+    TemplateContent,
+    TurboPrompt,
+)
 
 
 def test_turbo_all_none():
@@ -97,7 +102,9 @@ def test_from_file_with_initial_template_data():
     # Check the title and settings attributes
     assert tp.name == "turbo_prompt_with_examples"
     assert tp.description == "Example of turbo prompt with initial_template_data (few-shot)"
-    assert tp.settings.engine == "gpt-3.5-turbo"
+    sets = tp.settings
+    assert sets is not None
+    assert sets.engine == "gpt-3.5-turbo"
 
 
 def test_a_from_settings():
@@ -110,16 +117,19 @@ def test_a_from_settings():
 
     tp = TurboPrompt.from_settings(
         name="turbo_prompt_inline",
+        description="",
         system_template="You are an AI",
         user_template="Q:<message>",
         assistant_template="A:",
-        settings=None,
+        settings=OpenAIModelSettings(engine="gpt-4"),
         title=None,
-        initial_template_data=[{
-            "role": "system",
-            "content": "hey",
-            "name": "default",
-        }],
+        initial_template_data=[
+            TemplateContent(
+                content="hey", 
+                name="default", 
+                role=PromptRole.SYSTEM
+            )
+        ],
     )
 
     content = tp.build()

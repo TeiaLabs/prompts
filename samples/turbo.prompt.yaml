@@ -1,16 +1,12 @@
 name: basic_turbo_prompt
 description: |-
     Basic turbo prompt example
-system_prompt: |
+system_templates: |
     You are a chatbot
-user_prompt: |
+user_templates: |
     <name>: <message>
-assistant_prompt: |
+assistant_templates: |
     answer: <message>
-template_vars:
-    - input_sentence
-    - name
-    - message
 settings:
     temperature: 0.15
     engine: gpt-3.5-turbo

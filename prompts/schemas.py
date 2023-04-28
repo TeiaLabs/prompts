@@ -29,8 +29,7 @@ class PromptSchema(BaseModel):
 
 # ==== Dynamic classes ====
 class DynamicSchema(PromptSchema):
-    # Prompt initial config
-    initial_data: str | dict[str, str] = ""
+    prompt: str
 
 
 # ==== Turbo classes ====

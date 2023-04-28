@@ -47,14 +47,6 @@ def test_build_missing_args():
         PromptEnsemble(templates, expected_vars=None)
 
 
-def test_build_missing_args_invalid():
-    templates = ["<label>", "test"]
-    template_vars = ["label"]
-
-    with pytest.raises(exceptions.VariableNotInPromptError):
-        _ = PromptEnsemble(templates, template_vars)
-
-
 def test_build_many():
     templates = ["<label>", "a photo of <label>"]
     template_vars = ["label"]
@@ -73,7 +65,7 @@ def test_build_many():
     assert prompted_list[5] == "a photo of horse"
 
     with pytest.raises(exceptions.UndefinedVariableError):
-        _ = prompt.build(labels=["cat"])
+        _ = prompt.build(random=["cat"])
 
 
 def test_build_many_multiple_args():
@@ -131,15 +123,6 @@ def test_build_many_missing_args_valid():
 
     assert len(prompted_list) == 6
     assert prompted_list == expected
-
-
-def test_invalid_ensemble_template():
-    templates = ["<label>", "a photo of <img_class>", "picture of <label>"]
-    template_vars = ["label"]
-
-    # expect exception
-    with pytest.raises(exceptions.VariableNotInPromptError):
-        _ = PromptEnsemble(templates, template_vars)
 
 
 def test_prompt_ensemble_from_file():
