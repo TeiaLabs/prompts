@@ -27,7 +27,6 @@ class OpenAIModelSettings(BaseModel):
     frequency_penalty: float = 0
     presence_penalty: float = 0
     stop: Optional[list[str]] = None
-    stream: bool = False
 
 
 class TurboPromptSchema(BaseModel):
