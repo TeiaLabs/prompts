@@ -26,7 +26,7 @@ class PromptSchema(BaseModel):
 
 # ==== Dynamic classes ====
 class DynamicSchema(PromptSchema):
-    prompt: str
+    template: str
 
 
 # ==== Turbo classes ====

@@ -21,22 +21,22 @@ class DynamicPrompt:
 
     def __init__(
         self,
-        prompt: str,
-        template_vars: Optional[list[str]] = None,
+        template: str,
+        template_vars: list[str] | None = None,
         name: str = "",
-        description: str | None = None,
-        settings: Optional[dict[str, str]] = None,
+        description: str = "",
+        settings: dict[str, str] | None = None,
     ):
         self.name = name
         self.description = description
 
-        self.prompt = prompt
+        self.template = template
 
         self.template_vars = template_vars
         self.settings = settings
 
     def build(self, strict=True, **kwargs):
-        prompt = self.prompt
+        prompt = self.template
         for var, value in kwargs.items():
             pattern = f"<{var}>"
             if pattern not in prompt and strict:
@@ -62,7 +62,7 @@ class DynamicPrompt:
             f"{self.__class__.__name__}("
             f"name={self.name}, "
             f"description={self.description}, "
-            f'prompt="""{self.prompt}""", '
+            f'template="""{self.template}""", '
             f"template_vars={self.template_vars}, "
             f"settings={self.settings}"
         )

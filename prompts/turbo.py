@@ -226,19 +226,19 @@ class TurboPrompt:
         template_vars = set()
 
         for prompt in self.system_prompt.values():
-            prompts.append(prompt.prompt)
+            prompts.append(prompt.template)
             template_vars.update(prompt.template_vars or [])
 
         for prompt in self.user_prompt.values():
-            prompts.append(prompt.prompt)
+            prompts.append(prompt.template)
             template_vars.update(prompt.template_vars or [])
 
         for prompt in self.assistant_prompt.values():
-            prompts.append(prompt.prompt)
+            prompts.append(prompt.template)
             template_vars.update(prompt.template_vars or [])
 
         return DynamicPrompt(
             name=self.name,
-            prompt="\n".join(prompts),
+            template="\n".join(prompts),
             template_vars=list(template_vars) or None,
         )

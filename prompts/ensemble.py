@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Optional, Type
 
-from .exceptions import ArgumentNumberOfElementsError, ExpectedVarsArgumentError
 from .dynamic import DynamicPrompt
+from .exceptions import ArgumentNumberOfElementsError, ExpectedVarsArgumentError
 
 
 class PromptEnsemble:
@@ -37,7 +37,7 @@ class PromptEnsemble:
                 prompt = prompt_class(
                     name="",
                     description="",
-                    prompt=template,
+                    template=template,
                     template_vars=expected_vars,
                 )
                 self.prompts.append(prompt)

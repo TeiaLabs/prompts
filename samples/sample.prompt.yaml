@@ -1,7 +1,6 @@
 ---
-title: Sample prompt
-name: sample
-prompt: |
+name: Sample prompt
+template: |
     Fix and improve writing of the sentence below:
     <input_sentence>
 
