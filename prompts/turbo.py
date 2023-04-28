@@ -58,63 +58,83 @@ class TurboPrompt:
 
         return template  # type: ignore
 
-    def add_user_template(self, prompt_name: str, template: str | DynamicPrompt):
+    def add_user_template(self, template_name: str, template: str | DynamicPrompt):
         if isinstance(template, str):
             template = DynamicPrompt(template)
-        self.user_prompt[prompt_name] = template
+        self.user_prompt[template_name] = template
 
-    def add_system_template(self, prompt_name: str, template: str | DynamicPrompt):
+    def add_system_template(self, template_name: str, template: str | DynamicPrompt):
         if isinstance(template, str):
             template = DynamicPrompt(template)
-        self.system_prompt[prompt_name] = template
+        self.system_prompt[template_name] = template
 
-    def add_assistant_template(self, prompt_name: str, template: str | DynamicPrompt):
+    def add_assistant_template(self, template_name: str, template: str | DynamicPrompt):
         if isinstance(template, str):
             template = DynamicPrompt(template)
-        self.assistant_prompt[prompt_name] = template
+        self.assistant_prompt[template_name] = template
 
-    def add_user_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = self.default_template
+    def add_user_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
 
-        prompt = self.user_prompt[prompt_name].build(**kwargs)
+        prompt = self.user_prompt[template_name].build(**kwargs)
         self._add_prompt(
             prompt_type=PromptRole.USER,
             prompt=prompt,
-            name=prompt_name,
+            name=name,
         )
 
-    def add_system_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = self.default_template
+    def add_system_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
 
         print(kwargs)
-        prompt = self.system_prompt[prompt_name].build(**kwargs)
+        prompt = self.system_prompt[template_name].build(**kwargs)
         self._add_prompt(
             prompt_type=PromptRole.SYSTEM,
             prompt=prompt,
-            name=prompt_name,
+            name=name,
         )
 
-    def add_assistant_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = self.default_template
+    def add_assistant_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
 
-        prompt = self.assistant_prompt[prompt_name].build(**kwargs)
+        prompt = self.assistant_prompt[template_name].build(**kwargs)
         self._add_prompt(
             prompt_type=PromptRole.ASSISTANT,
             prompt=prompt,
-            name=prompt_name,
+            name=name,
         )
 
-    def _add_prompt(self, prompt_type: PromptRole, prompt: str, name: str):
-        self.prompts.append(
-            {
-                "role": prompt_type.value,
-                "name": name,
-                "content": prompt,
-            }
-        )
+    def _add_prompt(
+        self,
+        prompt_type: PromptRole,
+        prompt: str,
+        name: str | None = None,
+    ):
+        prompt_message = {
+            "role": prompt_type.value,
+            "content": prompt,
+        }
+        if name is not None:
+            prompt_message["name"] = name
+        self.prompts.append(prompt)
 
     def build(self, **_) -> list[dict[str, str]]:
         return copy.deepcopy(self.prompts)
@@ -183,11 +203,11 @@ class TurboPrompt:
                 continue
 
             if hist.role == PromptRole.SYSTEM:
-                prompt.add_system_message(prompt_name=hist.name, **hist.inputs)
+                prompt.add_system_message(template_name=hist.name, **hist.inputs)
             elif hist.role == PromptRole.USER:
-                prompt.add_user_message(prompt_name=hist.name, **hist.inputs)
+                prompt.add_user_message(template_name=hist.name, **hist.inputs)
             elif hist.role == PromptRole.ASSISTANT:
-                prompt.add_assistant_message(prompt_name=hist.name, **hist.inputs)
+                prompt.add_assistant_message(template_name=hist.name, **hist.inputs)
             else:
                 raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
 
