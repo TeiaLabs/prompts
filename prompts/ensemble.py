@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional, Type
 
 from .exceptions import ArgumentNumberOfElementsError, ExpectedVarsArgumentError
-from .prompt_builder import DynamicPrompt
+from .dynamic import DynamicPrompt
 
 
 class PromptEnsemble:

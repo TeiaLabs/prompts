@@ -64,7 +64,7 @@ def test_from_file():
 
     assert tp.name == "basic_turbo_prompt"
     assert tp.description == "Basic turbo prompt example"
-    from prompts.schema import OpenAIModelSettings
+    from prompts.schemas import OpenAIModelSettings
     assert tp.settings == OpenAIModelSettings(**{
         "temperature": 0.15,
         "engine": "gpt-3.5-turbo",

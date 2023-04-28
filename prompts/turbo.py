@@ -2,8 +2,8 @@ from typing import Dict, Optional, Union
 
 import yaml
 
-from .prompt_builder import DynamicPrompt
-from .schema import HistoryContentItem, PromptItem, TurboPromptSchema
+from .dynamic import DynamicPrompt
+from .schemas import HistoryContentItem, PromptItem, TurboPromptSchema
 
 
 class TurboPrompt:
