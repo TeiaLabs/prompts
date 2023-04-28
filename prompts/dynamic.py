@@ -23,12 +23,10 @@ class DynamicPrompt:
         self,
         prompt: str,
         template_vars: Optional[list[str]] = None,
-        name: str | None = None,
+        name: str = "",
         description: str | None = None,
         settings: Optional[dict[str, str]] = None,
-        title: Optional[str] = None,
     ):
-        self.title = title
         self.name = name
         self.description = description
 

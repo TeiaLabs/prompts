@@ -122,7 +122,6 @@ def test_a_from_settings():
         user_template="Q:<message>",
         assistant_template="A:",
         settings=OpenAIModelSettings(engine="gpt-4"),
-        title=None,
         initial_template_data=[
             TemplateContent(
                 content="hey", 

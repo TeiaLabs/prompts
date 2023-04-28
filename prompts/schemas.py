@@ -23,9 +23,6 @@ class PromptSchema(BaseModel):
     # Engine settings
     settings: OpenAIModelSettings
 
-    # Backwards compatibility
-    title: Optional[str]
-
 
 # ==== Dynamic classes ====
 class DynamicSchema(PromptSchema):

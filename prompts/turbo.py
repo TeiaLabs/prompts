@@ -22,9 +22,8 @@ class TurboPrompt:
         user_prompt: TEMPLATE_TYPE = None,
         assistant_prompt: TEMPLATE_TYPE = None,
         settings: OpenAIModelSettings | dict | None = None,
-        name: str | None = None,
+        name: str = "",
         description: str | None = None,
-        title: str | None = None,
     ):
         self.default_template = "default"
         if isinstance(settings, dict):
@@ -35,7 +34,6 @@ class TurboPrompt:
         self.assistant_prompt = self.__format_prompt_template(assistant_prompt)
 
         self.settings: OpenAIModelSettings | None = settings
-        self.title = title
         self.name = name
         self.description = description
 
@@ -132,15 +130,18 @@ class TurboPrompt:
     @classmethod
     def from_turbo_schema(cls, prompt_schema: TurboSchema):
         turbo_prompt = cls(
-            title=prompt_schema.title,
             name=prompt_schema.name,
             description=prompt_schema.description,
             settings=prompt_schema.settings,
         )
 
-        turbo_prompt.add_template(prompt_schema.system_templates, type=PromptRole.SYSTEM)
+        turbo_prompt.add_template(
+            prompt_schema.system_templates, type=PromptRole.SYSTEM
+        )
         turbo_prompt.add_template(prompt_schema.user_templates, type=PromptRole.USER)
-        turbo_prompt.add_template(prompt_schema.assistant_templates, type=PromptRole.ASSISTANT)
+        turbo_prompt.add_template(
+            prompt_schema.assistant_templates, type=PromptRole.ASSISTANT
+        )
         turbo_prompt.add_initial_template_data(
             turbo_prompt, prompt_schema.initial_template_data
         )
@@ -205,7 +206,6 @@ class TurboPrompt:
         description: str,
         settings: OpenAIModelSettings,
         initial_template_data: list[TemplateData | TemplateContent],
-        title: str | None = None,
         system_template: list[Template] | str = "",
         user_template: list[Template] | str = "",
         assistant_template: list[Template] | str = "",
@@ -213,7 +213,6 @@ class TurboPrompt:
         tbs = TurboSchema(
             name=name,
             description=description,
-            title=title,
             system_templates=system_template,
             user_templates=user_template,
             assistant_templates=assistant_template,
@@ -239,7 +238,7 @@ class TurboPrompt:
             template_vars.update(prompt.template_vars or [])
 
         return DynamicPrompt(
-            title=self.title,
+            name=self.name,
             prompt="\n".join(prompts),
             template_vars=list(template_vars) or None,
         )
