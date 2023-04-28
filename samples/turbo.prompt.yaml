@@ -4,7 +4,7 @@ description: |-
 system_templates: |
     You are a chatbot
 user_templates: |
-    <name>: <message>
+    <user_name>: <message>
 assistant_templates: |
     answer: <message>
 settings:

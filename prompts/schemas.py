@@ -31,7 +31,7 @@ class DynamicSchema(PromptSchema):
 
 # ==== Turbo classes ====
 class Template(BaseModel):
-    name: str
+    template_name: str
     template: str
 
 
@@ -42,15 +42,23 @@ class PromptRole(str, Enum):
 
 
 class TemplateData(BaseModel):
-    name: str = "default"
-    role: PromptRole
+    # Openai inputs
     inputs: dict[str, str]
+    name: str | None = None
+    role: PromptRole
+
+    # Prompts template management
+    template_name: str = "default"
 
 
 class TemplateContent(BaseModel):
-    name: str = "default"
-    role: PromptRole
+    # Openai inputs
     content: str
+    name: str | None = None
+    role: PromptRole
+
+    # Prompts template management
+    template_name: str = "default"
 
 
 class TurboSchema(PromptSchema):

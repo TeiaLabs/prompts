@@ -1,27 +1,27 @@
 name: all_the_turbo_features
 description: Turbo prompt with past messages
 system_templates:
-    - name: sys_prompt
+    - template_name: sys_prompt
       template: |
          You are an AI that fixes code issues:
          Language: <language>
 
 user_templates: 
-    - name: default
+    - template_name: default
       template: | 
         Code to check:
         ``
         <source_code>
         ``
 assistant_templates:
-    - name: assistant_super_prompt
+    - template_name: assistant_super_prompt
       template: |
         Bug Description:
         <prediction>
 
 initial_template_data:
     - role: system
-      name: sys_prompt
+      template_name: sys_prompt
       inputs: 
         language: python
     - role: user
@@ -30,7 +30,7 @@ initial_template_data:
             def sum_numbers(a, b):
                 return a * b
     - role: assistant
-      name: assistant_super_prompt
+      template_name: assistant_super_prompt
       inputs:
         prediction: |
             The function should return the sum of a and b, not their product.

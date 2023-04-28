@@ -53,7 +53,7 @@ class TurboPrompt:
 
         if isinstance(template, list):
             template = {
-                t.name: DynamicPrompt(t.template) for t in template
+                t.template_name: DynamicPrompt(t.template) for t in template
             }  # type: ignore
 
         return template  # type: ignore
@@ -98,7 +98,6 @@ class TurboPrompt:
         if template_name is None:
             template_name = self.default_template
 
-        print(kwargs)
         prompt = self.system_prompt[template_name].build(**kwargs)
         self._add_prompt(
             prompt_type=PromptRole.SYSTEM,
@@ -134,7 +133,7 @@ class TurboPrompt:
         }
         if name is not None:
             prompt_message["name"] = name
-        self.prompts.append(prompt)
+        self.prompts.append(prompt_message)
 
     def build(self, **_) -> list[dict[str, str]]:
         return copy.deepcopy(self.prompts)
@@ -142,7 +141,12 @@ class TurboPrompt:
     def add_raw_content(self, content_item: dict | TemplateContent):
         if isinstance(content_item, dict):
             content_item = TemplateContent(**content_item)
-        self.prompts.append(content_item.dict())
+
+        self._add_prompt(
+            prompt_type=content_item.role,
+            prompt=content_item.content,
+            name=content_item.name,
+        )
 
     def clear(self):
         self.prompts.clear()
@@ -180,10 +184,12 @@ class TurboPrompt:
         }
 
         if isinstance(template, str):
-            turbo_add_template_fn[type](prompt_name="default", template=template)
+            turbo_add_template_fn[type](template_name="default", template=template)
         elif isinstance(template, list):
             for p in template:
-                turbo_add_template_fn[type](prompt_name=p.name, template=p.template)
+                turbo_add_template_fn[type](
+                    template_name=p.template_name, template=p.template
+                )
         else:
             raise ValueError(
                 f"{type}_prompt must be a string or a list of strings/prompts"
@@ -203,11 +209,15 @@ class TurboPrompt:
                 continue
 
             if hist.role == PromptRole.SYSTEM:
-                prompt.add_system_message(template_name=hist.name, **hist.inputs)
+                prompt.add_system_message(
+                    template_name=hist.template_name, **hist.inputs
+                )
             elif hist.role == PromptRole.USER:
-                prompt.add_user_message(template_name=hist.name, **hist.inputs)
+                prompt.add_user_message(template_name=hist.template_name, **hist.inputs)
             elif hist.role == PromptRole.ASSISTANT:
-                prompt.add_assistant_message(template_name=hist.name, **hist.inputs)
+                prompt.add_assistant_message(
+                    template_name=hist.template_name, **hist.inputs
+                )
             else:
                 raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
 
