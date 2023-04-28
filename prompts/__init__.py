@@ -1,2 +1,2 @@
-from .prompt_builder import BasePrompt, DynamicPrompt
+from .dynamic import DynamicPrompt
 from .turbo import TurboPrompt
