@@ -3,15 +3,15 @@ from __future__ import annotations
 from typing import Optional, Type
 
 from .exceptions import ArgumentNumberOfElementsError, ExpectedVarsArgumentError
-from .prompt_builder import BasePrompt, DynamicPrompt
+from .prompt_builder import DynamicPrompt
 
 
 class PromptEnsemble:
     def __init__(
         self,
-        templates: list[str] | Type[BasePrompt],
+        templates: list[str],
         expected_vars: Optional[list[str]] = None,
-        prompt_class=DynamicPrompt,
+        prompt_class: Type[DynamicPrompt] = DynamicPrompt,
     ):
         """
         Args:
@@ -33,7 +33,14 @@ class PromptEnsemble:
                     raise ExpectedVarsArgumentError(
                         "expected_vars argument is mandatory when using string templates"
                     )
-                self.prompts.append(prompt_class(template, expected_vars))
+
+                prompt = prompt_class(
+                    name="",
+                    description="",
+                    prompt=template,
+                    template_vars=expected_vars,
+                )
+                self.prompts.append(prompt)
             else:
                 self.prompts.append(template)
 
