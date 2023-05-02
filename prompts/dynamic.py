@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .exceptions import UndefinedVariableError
-from .schemas import DynamicSchema
+from .schemas import DynamicSchema, OpenAIModelSettings
 from .utils import load_yaml
 
 if TYPE_CHECKING:
@@ -25,7 +25,7 @@ class DynamicPrompt:
         template_vars: list[str] | None = None,
         name: str = "",
         description: str = "",
-        settings: dict[str, str] | None = None,
+        settings: OpenAIModelSettings | dict[str, str] | None = None,
     ):
         self.name = name
         self.description = description
@@ -33,7 +33,11 @@ class DynamicPrompt:
         self.template = template
 
         self.template_vars = template_vars
-        self.settings = settings
+
+        if isinstance(settings, dict):
+            settings = OpenAIModelSettings(**settings)
+
+        self.settings: OpenAIModelSettings | None = settings
 
     def build(self, strict=True, **kwargs):
         prompt = self.template
