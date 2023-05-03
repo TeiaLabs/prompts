@@ -1,172 +1,274 @@
-from typing import Dict, List, Optional, Union
+import copy
 
 import yaml
 
-from .prompt_builder import DynamicPrompt
+from .dynamic import DynamicPrompt
+from .schemas import (
+    OpenAIModelSettings,
+    PromptRole,
+    Template,
+    TemplateContent,
+    TemplateData,
+    TurboSchema,
+)
+
+TEMPLATE_TYPE = list[Template] | DynamicPrompt | str | None
 
 
 class TurboPrompt:
     def __init__(
         self,
-        system_prompt: Optional[Union[str, DynamicPrompt]] = None,
-        user_prompt: Optional[Union[str, DynamicPrompt]] = None,
-        assistant_prompt: Optional[Union[str, DynamicPrompt]] = None,
-        settings: Optional[Dict] = None,
-        title: Optional[str] = None,
+        system_templates: TEMPLATE_TYPE = None,
+        user_templates: TEMPLATE_TYPE = None,
+        assistant_templates: TEMPLATE_TYPE = None,
+        settings: OpenAIModelSettings | dict | None = None,
+        name: str = "",
+        description: str | None = None,
     ):
-        if system_prompt is None:
-            system_prompt = DynamicPrompt("<message>")
-        elif isinstance(system_prompt, str):
-            system_prompt = DynamicPrompt(system_prompt)
+        self.default_template = "default"
+        if isinstance(settings, dict):
+            settings = OpenAIModelSettings(**settings)
 
-        if user_prompt is None:
-            user_prompt = DynamicPrompt("<message>")
-        elif isinstance(user_prompt, str):
-            user_prompt = DynamicPrompt(user_prompt)
+        self.system_prompt = self.__format_prompt_template(system_templates)
+        self.user_prompt = self.__format_prompt_template(user_templates)
+        self.assistant_prompt = self.__format_prompt_template(assistant_templates)
 
-        if assistant_prompt is None:
-            assistant_prompt = DynamicPrompt("<message>")
-        elif isinstance(assistant_prompt, str):
-            assistant_prompt = DynamicPrompt(assistant_prompt)
-
-        self.system_prompt = {"default": system_prompt}
-        self.user_prompt = {"default": user_prompt}
-        self.assistant_prompt = {"default": assistant_prompt}
-        self.settings = settings
-        self.title = title
+        self.settings: OpenAIModelSettings | None = settings
+        self.name = name
+        self.description = description
 
         self.prompts = []
 
-    def add_user_template(self, prompt_name: str, template: str | DynamicPrompt):
+    def __format_prompt_template(
+        self, template: TEMPLATE_TYPE
+    ) -> dict[str, DynamicPrompt]:
+        if template is None:
+            template = "<message>"
+
         if isinstance(template, str):
             template = DynamicPrompt(template)
 
-        self.user_prompt[prompt_name] = template
+        if isinstance(template, DynamicPrompt):
+            template = {self.default_template: template}  # type: ignore
 
-    def add_system_template(self, prompt_name: str, template: str | DynamicPrompt):
+        if isinstance(template, list):
+            template = {
+                t.template_name: DynamicPrompt(t.template) for t in template
+            }  # type: ignore
+
+        return template  # type: ignore
+
+    def add_user_template(self, template_name: str, template: str | DynamicPrompt):
         if isinstance(template, str):
             template = DynamicPrompt(template)
+        self.user_prompt[template_name] = template
 
-        self.system_prompt[prompt_name] = template
-
-    def add_assistant_template(self, prompt_name: str, template: str | DynamicPrompt):
+    def add_system_template(self, template_name: str, template: str | DynamicPrompt):
         if isinstance(template, str):
             template = DynamicPrompt(template)
+        self.system_prompt[template_name] = template
 
-        self.assistant_prompt[prompt_name] = template
+    def add_assistant_template(self, template_name: str, template: str | DynamicPrompt):
+        if isinstance(template, str):
+            template = DynamicPrompt(template)
+        self.assistant_prompt[template_name] = template
 
-    def add_user_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = "default"
+    def add_user_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
 
-        self._add_prompt("user", self.user_prompt[prompt_name].build(**kwargs))
-
-    def add_system_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = "default"
-
-        self._add_prompt("system", self.system_prompt[prompt_name].build(**kwargs))
-
-    def add_assistant_message(self, prompt_name: str | None = None, **kwargs):
-        if prompt_name is None:
-            prompt_name = "default"
-
+        prompt = self.user_prompt[template_name].build(**kwargs)
         self._add_prompt(
-            "assistant", self.assistant_prompt[prompt_name].build(**kwargs)
+            prompt_type=PromptRole.USER,
+            prompt=prompt,
+            name=name,
         )
 
-    def build(self, **_) -> list[Dict[str, str]]:
-        return [
-            {"role": prompt["type"], "content": prompt["prompt"]}
-            for prompt in self.prompts
-        ]
+    def add_system_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
+
+        prompt = self.system_prompt[template_name].build(**kwargs)
+        self._add_prompt(
+            prompt_type=PromptRole.SYSTEM,
+            prompt=prompt,
+            name=name,
+        )
+
+    def add_assistant_message(
+        self,
+        name: str | None = None,
+        template_name: str | None = None,
+        **kwargs,
+    ):
+        if template_name is None:
+            template_name = self.default_template
+
+        prompt = self.assistant_prompt[template_name].build(**kwargs)
+        self._add_prompt(
+            prompt_type=PromptRole.ASSISTANT,
+            prompt=prompt,
+            name=name,
+        )
+
+    def _add_prompt(
+        self,
+        prompt_type: PromptRole,
+        prompt: str,
+        name: str | None = None,
+    ):
+        prompt_message = {
+            "role": prompt_type.value,
+            "content": prompt,
+        }
+        if name is not None:
+            prompt_message["name"] = name
+        self.prompts.append(prompt_message)
+
+    def build(self, **_) -> list[dict[str, str]]:
+        return copy.deepcopy(self.prompts)
+
+    def add_raw_content(self, content_item: dict | TemplateContent):
+        if isinstance(content_item, dict):
+            content_item = TemplateContent(**content_item)
+
+        self._add_prompt(
+            prompt_type=content_item.role,
+            prompt=content_item.content,
+            name=content_item.name,
+        )
 
     def clear(self):
         self.prompts.clear()
 
-    def _add_prompt(self, prompt_type: str, prompt: str):
-        self.prompts.append({"type": prompt_type, "prompt": prompt})
+    @classmethod
+    def from_turbo_schema(cls, prompt_schema: TurboSchema):
+        turbo_prompt = cls(
+            name=prompt_schema.name,
+            description=prompt_schema.description,
+            settings=prompt_schema.settings,
+        )
+
+        turbo_prompt.add_template(
+            prompt_schema.system_templates, type=PromptRole.SYSTEM
+        )
+        turbo_prompt.add_template(prompt_schema.user_templates, type=PromptRole.USER)
+        turbo_prompt.add_template(
+            prompt_schema.assistant_templates, type=PromptRole.ASSISTANT
+        )
+        turbo_prompt.add_initial_template_data(
+            turbo_prompt, prompt_schema.initial_template_data
+        )
+
+        return turbo_prompt
+
+    def add_template(
+        self,
+        template: list[Template] | str,
+        type: PromptRole = PromptRole.ASSISTANT,
+    ) -> None:
+        turbo_add_template_fn = {
+            PromptRole.ASSISTANT: self.add_assistant_template,
+            PromptRole.USER: self.add_user_template,
+            PromptRole.SYSTEM: self.add_system_template,
+        }
+
+        if isinstance(template, str):
+            turbo_add_template_fn[type](template_name="default", template=template)
+        elif isinstance(template, list):
+            for p in template:
+                turbo_add_template_fn[type](
+                    template_name=p.template_name, template=p.template
+                )
+        else:
+            raise ValueError(
+                f"{type}_prompt must be a string or a list of strings/prompts"
+            )
+
+    def add_initial_template_data(
+        self,
+        prompt: "TurboPrompt",
+        initial_template_data: list[TemplateData | TemplateContent] | None,
+    ) -> None:
+        if initial_template_data is None:
+            return
+
+        for hist in initial_template_data:
+            if isinstance(hist, TemplateContent):
+                prompt.add_raw_content(hist)
+                continue
+
+            if hist.role == PromptRole.SYSTEM:
+                prompt.add_system_message(
+                    template_name=hist.template_name, **hist.inputs
+                )
+            elif hist.role == PromptRole.USER:
+                prompt.add_user_message(template_name=hist.template_name, **hist.inputs)
+            elif hist.role == PromptRole.ASSISTANT:
+                prompt.add_assistant_message(
+                    template_name=hist.template_name, **hist.inputs
+                )
+            else:
+                raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
 
     @classmethod
     def from_file(cls, file_path: str):
         with open(file_path, "r") as f:
             prompt_data = yaml.safe_load(f)
-        system_prompt = DynamicPrompt(
-            prompt=prompt_data["system_prompt"],
-        )
-        user_prompt = DynamicPrompt(
-            prompt=prompt_data["user_prompt"],
-        )
-        assistant_prompt = DynamicPrompt(
-            prompt=prompt_data["assistant_prompt"],
-        )
-        turbo_prompt = cls(
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-            assistant_prompt=assistant_prompt,
-            title=prompt_data["title"],
-            settings=prompt_data["settings"],
-        )
 
-        for message in prompt_data.get("past_messages", []):
-
-            role = message.get("role")
-            inputs = message.get("inputs", {})
-            if role == "user":
-                turbo_prompt.add_user_message(**inputs)
-            if role == "assistant":
-                turbo_prompt.add_assistant_message(**inputs)
-            if role == "system":
-                turbo_prompt.add_system_message(**inputs)
-
-        return turbo_prompt
+        tb = TurboSchema(**prompt_data)
+        return cls.from_turbo_schema(tb)
 
     @classmethod
     def from_settings(
         cls,
-        system_template: Optional[str] = None,
-        user_template: Optional[str] = None,
-        assistant_template: Optional[str] = None,
-        system_template_vars: Optional[List[str]] = None,
-        user_template_vars: Optional[List[str]] = None,
-        assistant_template_vars: Optional[List[str]] = None,
-        settings: Optional[Dict] = None,
-        title: Optional[str] = None,
+        name: str,
+        description: str,
+        settings: OpenAIModelSettings,
+        initial_template_data: list[TemplateData | TemplateContent],
+        system_template: list[Template] | str = "",
+        user_template: list[Template] | str = "",
+        assistant_template: list[Template] | str = "",
     ):
-        system_prompt = None
-        user_prompt = None
-        assistant_prompt = None
-        if system_template is not None:
-            system_prompt = DynamicPrompt(system_template, system_template_vars)
-        if user_template is not None:
-            user_prompt = DynamicPrompt(user_template, user_template_vars)
-        if assistant_template is not None:
-            assistant_prompt = DynamicPrompt(
-                assistant_template, assistant_template_vars
-            )
-        return cls(
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-            assistant_prompt=assistant_prompt,
+        tbs = TurboSchema(
+            name=name,
+            description=description,
+            system_templates=system_template,
+            user_templates=user_template,
+            assistant_templates=assistant_template,
+            initial_template_data=initial_template_data,
             settings=settings,
-            title=title,
         )
+        return cls.from_turbo_schema(tbs)
 
     def to_dynamic(self) -> DynamicPrompt:
+        prompts = []
+        template_vars = set()
+
         for prompt in self.system_prompt.values():
-            prompt_string = prompt.prompt
-            template_vars = set(prompt.template_vars or [])
+            prompts.append(prompt.template)
+            template_vars.update(prompt.template_vars or [])
 
         for prompt in self.user_prompt.values():
-            prompt_string += prompt.prompt
+            prompts.append(prompt.template)
             template_vars.update(prompt.template_vars or [])
 
         for prompt in self.assistant_prompt.values():
-            prompt_string += prompt.prompt
+            prompts.append(prompt.template)
             template_vars.update(prompt.template_vars or [])
 
         return DynamicPrompt(
-            title=self.title,
-            prompt=prompt_string,
+            name=self.name,
+            template="\n".join(prompts),
             template_vars=list(template_vars) or None,
         )
