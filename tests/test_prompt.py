@@ -1,6 +1,6 @@
 import pytest
 
-from prompts import DynamicPrompt, exceptions
+from prompts import DynamicPrompt, exceptions, OpenAIModelSettings
 
 
 class TestPrompt:
@@ -23,10 +23,10 @@ class TestPrompt:
         assert expected_prompt == prompt_str
 
         settings = prompt.settings
-        assert isinstance(settings, dict)
-        assert isinstance(settings['temperature'], float)
-        assert settings['temperature'] == 0.15
-        assert settings['engine'] == 'text-davinci-003'
+        assert isinstance(settings, OpenAIModelSettings)
+        assert isinstance(settings.temperature, float)
+        assert settings.temperature == 0.15
+        assert settings.engine == 'text-davinci-003'
 
     @staticmethod
     def test_str_prompt():
