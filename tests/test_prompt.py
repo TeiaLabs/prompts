@@ -26,7 +26,7 @@ class TestPrompt:
         assert isinstance(settings, OpenAIModelSettings)
         assert isinstance(settings.temperature, float)
         assert settings.temperature == 0.15
-        assert settings.engine == 'text-davinci-003'
+        assert settings.model == 'text-davinci-003'
 
     @staticmethod
     def test_str_prompt():

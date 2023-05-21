@@ -35,4 +35,4 @@ initial_template_data:
         prediction: |
             The function should return the sum of a and b, not their product.
 settings:    
-    engine: gpt-3.5-turbo
+    model: gpt-3.5-turbo

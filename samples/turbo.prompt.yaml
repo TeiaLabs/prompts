@@ -9,5 +9,5 @@ assistant_templates: |
     answer: <message>
 settings:
     temperature: 0.15
-    engine: gpt-3.5-turbo
+    model: gpt-3.5-turbo
     max_tokens: 32

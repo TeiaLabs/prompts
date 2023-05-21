@@ -86,7 +86,7 @@ def test_from_file():
     assert tp.settings == OpenAIModelSettings(
         **{
             "temperature": 0.15,
-            "engine": "gpt-3.5-turbo",
+            "model": "gpt-3.5-turbo",
             "max_tokens": 32,
         }
     )
@@ -131,7 +131,7 @@ def test_from_file_with_initial_template_data():
     )
     sets = tp.settings
     assert sets is not None
-    assert sets.engine == "gpt-3.5-turbo"
+    assert sets.model == "gpt-3.5-turbo"
 
 
 def test_a_from_settings():
@@ -148,7 +148,7 @@ def test_a_from_settings():
         system_template="You are an AI",
         user_template="Q:<message>",
         assistant_template="A:",
-        settings=OpenAIModelSettings(engine="gpt-4"),
+        settings=OpenAIModelSettings(model="gpt-4"),
         initial_template_data=[
             TemplateContent(
                 content="hey", template_name="default", role=PromptRole.SYSTEM

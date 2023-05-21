@@ -10,4 +10,4 @@ template_vars:
 settings:
     top-k: 1
     temperature: 0.15
-    engine: text-davinci-003
+    model: text-davinci-003

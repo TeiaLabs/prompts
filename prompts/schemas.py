@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 # ==== Generic classes ====
 class OpenAIModelSettings(BaseModel):
-    engine: str
+    model: str
     max_tokens: int = 256
     temperature: float = 0.0
     top_p: float = 1
@@ -18,17 +18,14 @@ class OpenAIModelSettings(BaseModel):
     user: str | None = None
 
 
-class PromptSchema(BaseModel):
+# ==== Dynamic classes ====
+class DynamicSchema(BaseModel):
     # Prompt identification
     name: str
     description: str = ""
 
     # Engine settings
     settings: OpenAIModelSettings
-
-
-# ==== Dynamic classes ====
-class DynamicSchema(PromptSchema):
     template: str
 
 
@@ -64,12 +61,16 @@ class TemplateContent(BaseModel):
     template_name: str = "default"
 
 
-class TurboSchema(PromptSchema):
+class TurboSchema(BaseModel):
+    # Prompt identification
+    name: str
+    description: str = ""
+    # Engine settings
+    settings: OpenAIModelSettings
     # Prompt templates
     system_templates: list[Template] | str
     user_templates: list[Template] | str
     assistant_templates: list[Template] | str
-
     # Prompt initial config
     initial_template_data: list[TemplateData | TemplateContent] = Field(
         default_factory=list
