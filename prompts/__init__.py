@@ -4,8 +4,8 @@ from .schemas import (
     OpenAIModelSettings,
     PromptRole,
     Template,
-    TemplateContent,
-    TemplateData,
+    ChatMLMessage,
+    TemplateInputs,
     TurboSchema,
 )
 from .turbo import TurboPrompt

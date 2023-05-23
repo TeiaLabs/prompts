@@ -41,24 +41,18 @@ class PromptRole(str, Enum):
     ASSISTANT = "assistant"
 
 
-class TemplateData(BaseModel):
-    # Openai inputs
+class TemplateInputs(BaseModel):
     inputs: dict[str, str]
     name: str | None = None
     role: PromptRole
-
-    # Prompts template management
+    # advanced usage: select sub-templates
     template_name: str = "default"
 
 
-class TemplateContent(BaseModel):
-    # Openai inputs
+class ChatMLMessage(BaseModel):
     content: str
     name: str | None = None
     role: PromptRole
-
-    # Prompts template management
-    template_name: str = "default"
 
 
 class TurboSchema(BaseModel):
@@ -72,6 +66,6 @@ class TurboSchema(BaseModel):
     user_templates: list[Template] | str
     assistant_templates: list[Template] | str
     # Prompt initial config
-    initial_template_data: list[TemplateData | TemplateContent] = Field(
+    initial_template_data: list[TemplateInputs | ChatMLMessage] = Field(
         default_factory=list
     )

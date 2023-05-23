@@ -7,8 +7,8 @@ from .schemas import (
     OpenAIModelSettings,
     PromptRole,
     Template,
-    TemplateContent,
-    TemplateData,
+    ChatMLMessage,
+    TemplateInputs,
     TurboSchema,
 )
 
@@ -138,9 +138,9 @@ class TurboPrompt:
     def build(self, **_) -> list[dict[str, str]]:
         return copy.deepcopy(self.prompts)
 
-    def add_raw_content(self, content_item: dict | TemplateContent):
+    def add_raw_content(self, content_item: dict | ChatMLMessage):
         if isinstance(content_item, dict):
-            content_item = TemplateContent(**content_item)
+            content_item = ChatMLMessage(**content_item)
 
         self._add_prompt(
             prompt_type=content_item.role,
@@ -198,13 +198,13 @@ class TurboPrompt:
     def add_initial_template_data(
         self,
         prompt: "TurboPrompt",
-        initial_template_data: list[TemplateData | TemplateContent] | None,
+        initial_template_data: list[TemplateInputs | ChatMLMessage] | None,
     ) -> None:
         if initial_template_data is None:
             return
 
         for hist in initial_template_data:
-            if isinstance(hist, TemplateContent):
+            if isinstance(hist, ChatMLMessage):
                 prompt.add_raw_content(hist)
                 continue
 
@@ -235,7 +235,7 @@ class TurboPrompt:
         name: str,
         description: str,
         settings: OpenAIModelSettings,
-        initial_template_data: list[TemplateData | TemplateContent],
+        initial_template_data: list[TemplateInputs | ChatMLMessage],
         system_template: list[Template] | str = "",
         user_template: list[Template] | str = "",
         assistant_template: list[Template] | str = "",
