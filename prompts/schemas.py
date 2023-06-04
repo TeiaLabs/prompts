@@ -1,14 +1,14 @@
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
 
 # ==== Generic classes ====
 class OpenAIModelSettings(BaseModel):
+    # TODO: these defaults are terrible. We must remove them.
     model: str
     max_tokens: int = 256
-    temperature: float = 0.0
+    temperature: float = 0.2
     top_p: float = 1
     frequency_penalty: float = 0
     presence_penalty: float = 0
