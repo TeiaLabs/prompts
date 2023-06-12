@@ -9,13 +9,13 @@ class OpenAIModelSettings(BaseModel):
     model: str
     max_tokens: int = 256
     temperature: float = 0.2
-    top_p: float = 1
-    frequency_penalty: float = 0
-    presence_penalty: float = 0
-    logit_bias: dict[int, int] | None = None
-    stop: list[str] = Field(default_factory=list)
-    n: int = 1
-    user: str | None = None
+    # top_p: float = 1
+    # frequency_penalty: float = 0
+    # presence_penalty: float = 0
+    # logit_bias: dict[int, int] | None = None
+    # stop: list[str] = Field(default_factory=list)
+    # n: int = 1
+    # user: str | None = None
 
 
 # ==== Dynamic classes ====
