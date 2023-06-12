@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import TypedDict, NotRequired
 
 from pydantic import BaseModel, Field
 
@@ -41,12 +42,12 @@ class PromptRole(str, Enum):
     ASSISTANT = "assistant"
 
 
-class TemplateInputs(BaseModel):
+class TemplateInputs(TypedDict):
     inputs: dict[str, str]
-    name: str | None = None
+    name: NotRequired[str]
     role: PromptRole
     # advanced usage: select sub-templates
-    template_name: str = "default"
+    template_name: NotRequired[str]
 
 
 class ChatMLMessage(BaseModel):
