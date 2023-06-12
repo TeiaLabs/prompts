@@ -2,7 +2,7 @@ from prompts import (
     DynamicPrompt,
     OpenAIModelSettings,
     PromptRole,
-    TemplateContent,
+    TemplateInputs,
     TurboPrompt,
 )
 
@@ -145,13 +145,13 @@ def test_a_from_settings():
     tp = TurboPrompt.from_settings(
         name="turbo_prompt_inline",
         description="",
-        system_template="You are an AI",
+        system_template="<message>",
         user_template="Q:<message>",
         assistant_template="A:",
         settings=OpenAIModelSettings(model="gpt-4"),
         initial_template_data=[
-            TemplateContent(
-                content="hey", template_name="default", role=PromptRole.SYSTEM
+            TemplateInputs(
+                inputs={"message": "You are an AI."}, role=PromptRole.SYSTEM
             )
         ],
     )
@@ -161,5 +161,5 @@ def test_a_from_settings():
     print(content)
     assert content[0] == {
         "role": "system",
-        "content": "hey",
+        "content": "You are an AI.",
     }

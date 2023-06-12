@@ -208,18 +208,18 @@ class TurboPrompt:
                 prompt.add_raw_content(hist)
                 continue
 
-            if hist.role == PromptRole.SYSTEM:
+            if hist["role"] == PromptRole.SYSTEM:
                 prompt.add_system_message(
-                    template_name=hist.template_name, **hist.inputs
+                    template_name=hist.get("template_name"), **hist["inputs"]
                 )
-            elif hist.role == PromptRole.USER:
-                prompt.add_user_message(template_name=hist.template_name, **hist.inputs)
-            elif hist.role == PromptRole.ASSISTANT:
+            elif hist["role"] == PromptRole.USER:
+                prompt.add_user_message(template_name=hist.get("template_name"), **hist["inputs"])
+            elif hist["role"] == PromptRole.ASSISTANT:
                 prompt.add_assistant_message(
-                    template_name=hist.template_name, **hist.inputs
+                    template_name=hist.get("template_name"), **hist["inputs"]
                 )
             else:
-                raise ValueError(f"Invalid role in initial_template_data: {hist.role}")
+                raise ValueError(f"Invalid role in initial_template_data: {hist['role']}")
 
     @classmethod
     def from_file(cls, file_path: str):
@@ -235,7 +235,7 @@ class TurboPrompt:
         name: str,
         description: str,
         settings: OpenAIModelSettings,
-        initial_template_data: list[TemplateInputs | ChatMLMessage],
+        initial_template_data: list[TemplateInputs] | list[ChatMLMessage],
         system_template: list[Template] | str = "",
         user_template: list[Template] | str = "",
         assistant_template: list[Template] | str = "",
