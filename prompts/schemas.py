@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, NotRequired
+from typing import TypedDict, NotRequired, Optional
 
 from pydantic import BaseModel, Field
 
@@ -63,9 +63,9 @@ class TurboSchema(BaseModel):
     # Engine settings
     settings: OpenAIModelSettings
     # Prompt templates
-    system_templates: list[Template] | str
-    user_templates: list[Template] | str
-    assistant_templates: list[Template] | str
+    system_templates: list[Template] | str = None
+    user_templates: list[Template] | str = None
+    assistant_templates: list[Template] | str = None
     # Prompt initial config
     initial_template_data: list[TemplateInputs | ChatMLMessage] = Field(
         default_factory=list

@@ -159,16 +159,20 @@ class TurboPrompt:
             settings=prompt_schema.settings,
         )
 
-        turbo_prompt.add_template(
-            prompt_schema.system_templates, type=PromptRole.SYSTEM
-        )
-        turbo_prompt.add_template(prompt_schema.user_templates, type=PromptRole.USER)
-        turbo_prompt.add_template(
-            prompt_schema.assistant_templates, type=PromptRole.ASSISTANT
-        )
-        turbo_prompt.add_initial_template_data(
-            turbo_prompt, prompt_schema.initial_template_data
-        )
+        if prompt_schema.system_templates:
+            turbo_prompt.add_template(
+                prompt_schema.system_templates, type=PromptRole.SYSTEM
+            )
+        if prompt_schema.user_templates:
+            turbo_prompt.add_template(prompt_schema.user_templates, type=PromptRole.USER)
+        if prompt_schema.assistant_templates:
+            turbo_prompt.add_template(
+                prompt_schema.assistant_templates, type=PromptRole.ASSISTANT
+            )
+        if prompt_schema.initial_template_data:
+            turbo_prompt.add_initial_template_data(
+                turbo_prompt, prompt_schema.initial_template_data
+            )
 
         return turbo_prompt
 
