@@ -37,6 +37,6 @@ class UndefinedVariableError(PromptError):
 
 
 class TemplateNotInPromptError(PromptError):
-    """Tamplete not found in prompt"""
+    """Template not found in prompt"""
 
     pass

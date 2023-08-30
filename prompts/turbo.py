@@ -86,7 +86,7 @@ class TurboPrompt:
         try:
             prompt = self.user_prompt[template_name].build(**kwargs)
         except KeyError:
-            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+            raise TemplateNotInPromptError(f"Template {template_name} not found")
 
         self._add_prompt(
             prompt_type=PromptRole.USER,
@@ -106,7 +106,7 @@ class TurboPrompt:
         try:
             prompt = self.system_prompt[template_name].build(**kwargs)
         except KeyError:
-            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+            raise TemplateNotInPromptError(f"Template{template_name} not found")
 
         self._add_prompt(
             prompt_type=PromptRole.SYSTEM,
@@ -126,7 +126,7 @@ class TurboPrompt:
         try:
             prompt = self.assistant_prompt[template_name].build(**kwargs)
         except KeyError:
-            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+            raise TemplateNotInPromptError(f"Template {template_name} not found")
 
         self._add_prompt(
             prompt_type=PromptRole.ASSISTANT,
