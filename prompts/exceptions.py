@@ -1,7 +1,9 @@
 class PromptError(Exception):
     """Base class for other exceptions"""
 
-    pass
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
 
 
 class ExpectedVarsArgumentError(PromptError):
@@ -30,5 +32,11 @@ class VariableNotInPromptError(PromptError):
 
 class UndefinedVariableError(PromptError):
     """Atempted to use undeclared variables"""
+
+    pass
+
+
+class TemplateNotInPromptError(PromptError):
+    """Tamplete not found in prompt"""
 
     pass

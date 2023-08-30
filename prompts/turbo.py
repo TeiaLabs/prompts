@@ -3,11 +3,12 @@ import copy
 import yaml
 
 from .dynamic import DynamicPrompt
+from .exceptions import TemplateNotInPromptError
 from .schemas import (
+    ChatMLMessage,
     OpenAIModelSettings,
     PromptRole,
     Template,
-    ChatMLMessage,
     TemplateInputs,
     TurboSchema,
 )
@@ -82,7 +83,11 @@ class TurboPrompt:
         if template_name is None:
             template_name = self.default_template
 
-        prompt = self.user_prompt[template_name].build(**kwargs)
+        try:
+            prompt = self.user_prompt[template_name].build(**kwargs)
+        except KeyError:
+            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+
         self._add_prompt(
             prompt_type=PromptRole.USER,
             prompt=prompt,
@@ -98,7 +103,11 @@ class TurboPrompt:
         if template_name is None:
             template_name = self.default_template
 
-        prompt = self.system_prompt[template_name].build(**kwargs)
+        try:
+            prompt = self.system_prompt[template_name].build(**kwargs)
+        except KeyError:
+            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+
         self._add_prompt(
             prompt_type=PromptRole.SYSTEM,
             prompt=prompt,
@@ -114,7 +123,11 @@ class TurboPrompt:
         if template_name is None:
             template_name = self.default_template
 
-        prompt = self.assistant_prompt[template_name].build(**kwargs)
+        try:
+            prompt = self.assistant_prompt[template_name].build(**kwargs)
+        except KeyError:
+            raise TemplateNotInPromptError(f"Tampelate {template_name} not found")
+
         self._add_prompt(
             prompt_type=PromptRole.ASSISTANT,
             prompt=prompt,
@@ -213,13 +226,17 @@ class TurboPrompt:
                     template_name=hist.get("template_name"), **hist["inputs"]
                 )
             elif hist["role"] == PromptRole.USER:
-                prompt.add_user_message(template_name=hist.get("template_name"), **hist["inputs"])
+                prompt.add_user_message(
+                    template_name=hist.get("template_name"), **hist["inputs"]
+                )
             elif hist["role"] == PromptRole.ASSISTANT:
                 prompt.add_assistant_message(
                     template_name=hist.get("template_name"), **hist["inputs"]
                 )
             else:
-                raise ValueError(f"Invalid role in initial_template_data: {hist['role']}")
+                raise ValueError(
+                    f"Invalid role in initial_template_data: {hist['role']}"
+                )
 
     @classmethod
     def from_file(cls, file_path: str):
