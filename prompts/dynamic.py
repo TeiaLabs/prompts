@@ -45,7 +45,7 @@ class DynamicPrompt:
             pattern = f"<{var}>"
             if pattern not in prompt and strict:
                 raise UndefinedVariableError(
-                    f"Variable {var} was not found in prompt (expected vars={self.template_vars})."
+                    message=f"Variable {var} was not found in prompt (expected vars={self.template_vars})."
                 )
             prompt = prompt.replace(pattern, value)
         return prompt
