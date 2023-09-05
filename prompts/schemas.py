@@ -1,5 +1,6 @@
+import re
 from enum import Enum
-from typing import TypedDict, NotRequired
+from typing import NotRequired, TypedDict
 
 from pydantic import BaseModel, Field
 
@@ -70,3 +71,32 @@ class TurboSchema(BaseModel):
     initial_template_data: list[TemplateInputs | ChatMLMessage] = Field(
         default_factory=list
     )
+
+    @classmethod
+    def get_template_vars(cls, turbo_schema: "TurboSchema") -> list[str]:
+        template_vars = []
+        # Compile the regular expression pattern
+        pattern = re.compile(r"<(.*?)>")
+
+        # Extract template variables from system_templates
+        if isinstance(turbo_schema.system_templates, list):
+            for system_template in turbo_schema.system_templates:
+                if isinstance(system_template, Template):
+                    template = system_template.template
+                    template_vars += pattern.findall(template)
+
+        # Extract template variables from user_templates
+        if isinstance(turbo_schema.user_templates, list):
+            for user_template in turbo_schema.user_templates:
+                if isinstance(user_template, Template):
+                    template = user_template.template
+                    template_vars += pattern.findall(template)
+
+        # Extract template variables from assistant_templates
+        if isinstance(turbo_schema.assistant_templates, list):
+            for assistant_template in turbo_schema.assistant_templates:
+                if isinstance(assistant_template, Template):
+                    template = assistant_template.template
+                    template_vars += pattern.findall(template)
+
+        return template_vars
