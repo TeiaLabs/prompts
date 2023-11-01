@@ -1,0 +1,8 @@
+{% extends "blocks_parent.j2" %}
+{% block foo %}
+Parent: {{ super() }}
+Child: {{ var1 }}
+{% endblock %}
+{% block baz %}
+baz child
+{% endblock %}
