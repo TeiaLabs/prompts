@@ -4,6 +4,9 @@ from .base import BaseArtifact
 from .text import TextArtifact
 
 
+ChatMessageRenderer = Callable[["ChatMessageArtifact"], Any]
+
+
 class ChatMessageArtifact(TextArtifact):
     role: Literal["assistant", "system", "user"]
     sender_name: Optional[str]
@@ -12,24 +15,25 @@ class ChatMessageArtifact(TextArtifact):
     def render(
         self,
         strict: bool = True,
-        custom_renderer: Optional[Callable[[str, str, str], Any]] = None,
+        chat_message_renderer: Optional[ChatMessageRenderer] = None,
         **context: dict[str, BaseArtifact],
     ) -> dict:
         rendered_message = super().render(strict=strict, **context)
-        if custom_renderer:
-            return custom_renderer(
-                rendered_message,
-                self.role,
-                self.sender_name,
-            )
-        return dict(
+        tmp_artifact = ChatMessageArtifact(
             content=rendered_message,
-            role=self.role,
-            name=self.sender_name,
+            **self.dict(exclude={"content"}),
         )
+        if chat_message_renderer is None:
+            # Delayed import to prevent circular import in renderer
+            from ..rendering.chat import chat_message_to_chatml
+
+            chat_message_renderer = chat_message_to_chatml
+
+        tmp_artifact_rendered = chat_message_renderer(tmp_artifact)
+        return tmp_artifact_rendered
+
 
 if __name__ == "__main__":
-    from .text import TextArtifact
     artifact_template_with_var = TextArtifact(
         name="artifact_template_with_var",
         content="Artifact Template with subvar: {{ foo.bar }}",
@@ -58,12 +62,11 @@ if __name__ == "__main__":
     print(f"Referenced variables ({len(referenced_vars)}): {referenced_vars}")
     # exit()
 
+    from ..rendering.chat import chat_message_to_string
+
     rendered = chat_message.render(
         strict=True,
-        # custom_renderer=lambda content, role, sender_name: "".join([
-        #     f"{role.upper()}" + (f" ({sender_name})" if sender_name else ""),
-        #     f": {content}",
-        # ]),
+        # chat_message_renderer=chat_message_to_string,
         **context,
     )
     print(rendered)
