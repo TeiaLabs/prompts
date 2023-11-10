@@ -1,17 +1,13 @@
 from abc import abstractmethod
-from typing import Any, Self
-
-from pydantic import BaseModel
+from typing import Any
 
 from ..artifact.base import BaseArtifact
 
 
-class BasePrompt(BaseModel):
-    artifacts: list[BaseArtifact | Self]
+class BasePrompt(BaseArtifact):
+    artifacts: list[BaseArtifact]
     description: str = ""  # prompt description
     metadata: dict[str, Any] | None = None  # additional data about the prompt
-    name: str  # unique identifier to reference a template
-    type: str  # template type (specific prompts override this)
 
     @abstractmethod
     def get_referenced_variables(
@@ -33,7 +29,7 @@ class BasePrompt(BaseModel):
     @abstractmethod
     def render(
         self,
-        strict: bool = True,
+        strict: bool = False,
         **context: dict[str, Any],
     ) -> Any:
         """

@@ -5,16 +5,65 @@ from .base import BasePrompt
 
 
 class TextCompletionPrompt(BasePrompt):
-    prompt: str
-    type: str = "text_completion"
+    content: str  # completion prompt starting point
+    type: str = "prompt_text_completion"
 
-    def get_referenced_variables(self) -> set[str]:
-        prompt = TextArtifact(name=self.name, content=self.prompt)
-        return prompt.get_referenced_variables(recursive=True)
+    def get_referenced_variables(
+        self,
+        **context: dict[str, Any],
+    ) -> set[str]:
+        prompt = TextArtifact(name=self.name, content=self.content)
+        prompt_artifacts = {a.name: a for a in self.artifacts}
+        prompt_context = {**context, **prompt_artifacts}
+        return prompt.get_referenced_variables(recursive=True, **prompt_context)
 
     def render(
         self,
         strict: bool = True,
         **context: dict[str, Any],
     ) -> str:
-        pass
+        prompt = TextArtifact(name=self.name, content=self.content)
+        prompt_artifacts = {a.name: a for a in self.artifacts}
+        prompt_context = {**context, **prompt_artifacts}
+        return prompt.render(strict=strict, **prompt_context)
+
+
+
+if __name__ == "__main__":
+    general_instruction = TextArtifact(
+        name="general_instruction",
+        content="Your goal is to summarize the text below.",
+    )
+    specific_instruction = TextArtifact(
+        name="specific_instruction",
+        content="Your summary should be concise.",
+    )
+    prompt = TextCompletionPrompt(
+        name="summarizer",
+        description="Summarizes texts.",
+        content="\n".join([
+            "{{ general_instruction }}",
+            "{% if specific_instruction %}",
+            "{{ specific_instruction }}",
+            "{% endif %}",
+            "Text to summarize:",
+            "{{ text }}",
+        ]),
+        artifacts=[general_instruction],
+        metadata=dict(
+            model_name="gpt-3.5-turbo",
+            model_provider="openai",
+        )
+    )
+
+    context = {
+        "text": "This is a text to summarize.",
+        "specific_instruction": specific_instruction,
+    }
+
+    referenced_vars = prompt.get_referenced_variables(**context)
+    print(f"Referenced variables ({len(referenced_vars)}): {referenced_vars}")
+    # exit()
+
+    rendered = prompt.render(strict=False, **context)
+    print(rendered)
