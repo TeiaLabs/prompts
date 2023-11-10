@@ -25,7 +25,11 @@ def render_template(
     context: dict[str, str],
 ) -> str:
     """Render a text artifact using Jinja2."""
-    env = Environment(loader=DictLoader(subtemplates))
+    env = Environment(
+        loader=DictLoader(subtemplates),
+        trim_blocks=True,
+        lstrip_blocks=True,
+    )
     template: Template = env.from_string(template)
     try:
         rendered = template.render(**context)
