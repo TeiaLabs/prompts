@@ -1,3 +1,4 @@
 jinja2
 pyaml
 pydantic<2.0
+python-dotenv
