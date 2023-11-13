@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from ..artifact.chat import ChatMessageArtifact, ChatMessageRenderer
 from .base import BasePrompt
@@ -49,43 +49,3 @@ class ChatCompletionPrompt(BasePrompt):
             )
             rendered_messages.append(curr_msg_rendered)
         return rendered_messages
-
-
-if __name__ == "__main__":
-    system_message = ChatMessageArtifact(
-        name="system_prompt",
-        content="You are a helpful chatbot.",
-        role="system",
-    )
-    user_message = ChatMessageArtifact(
-        name="user_message",
-        content="Who was {{ person }}?",
-        role="user",
-        sender_name="John",
-    )
-
-    chat_prompt = ChatCompletionPrompt(
-        name="chat",
-        description="Conversation between a chatbot and a human.",
-        content=["system_prompt", "user_message"],
-        artifacts=[system_message, user_message],
-        metadata=dict(
-            model_name="gpt-3.5-turbo",
-            model_provider="openai",
-        ),
-    )
-
-    context = {"person": "Napoleon Bonaparte"}
-
-    referenced_vars = chat_prompt.get_referenced_variables(**context)
-    print(f"Referenced variables ({len(referenced_vars)}): {referenced_vars}")
-    # exit()
-
-    from ..rendering.chat import chat_message_to_string
-
-    rendered = chat_prompt.render(
-        strict=False,
-        # chat_message_renderer=chat_message_to_string,
-        **context,
-    )
-    print(rendered)
