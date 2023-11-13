@@ -30,8 +30,11 @@ class TextArtifact(BaseArtifact):
             # We must recurse through all references in case there are Jinja templates
             for reference in list(referenced_vars):
                 var = context.get(reference)
-                # TODO: this is ugly and we still need to deal with
-                # `collections.abc.Mapping` types. Yikes.
+                # TODO: this would add support for iterables in Jinja
+                # (e.g., for loops). However, this would add a lot of
+                # complexity to the code right now.
+                # This snippet adds support for iterables, but we would
+                # still need to deal with `collections.abc.Mapping` types.
                 # if isinstance(var, Iterable):
                 #     for item in var:
                 #         if issubclass(type(item), BaseArtifact):
@@ -44,8 +47,6 @@ class TextArtifact(BaseArtifact):
 
                 if issubclass(type(var), str):
                     # Convert strings to TextArtifact to allow Jinja stuff
-                    # TODO: is this the right place to do this? What will happen
-                    # during reference resolution for other artifact types?
                     var = TextArtifact(name=reference, content=var)
                 if issubclass(type(var), BaseArtifact):
                     var = cast(BaseArtifact, var)
@@ -66,7 +67,7 @@ class TextArtifact(BaseArtifact):
         # Otherwise, we may run into dynamic Jinja rendering issues.
         # For instance, if a reference is only used in a conditional that does
         # not evaluate to True, it may not be needed.
-        # Potential solution: "jinja2.Undefined" classes.
+        # Potential solution: "jinja2.Undefined" classes for custom behavior.
         if strict:
             referenced_vars = self.get_referenced_variables(
                 recursive=True,
@@ -95,7 +96,6 @@ class TextArtifact(BaseArtifact):
                 context_obj = cast(BaseArtifact, context_obj)
                 # Recursively call render() on the artifact.
                 # Otherwise, Jinja won't replace variables/templates.
-                # variables[context_obj.name] = context_obj.content
                 variables[context_obj.name] = context_obj.render(
                     strict=strict, **context
                 )
@@ -108,57 +108,3 @@ class TextArtifact(BaseArtifact):
             context=variables,
         )
         return rendered_content
-
-
-if __name__ == "__main__":
-    artifact_var = TextArtifact(
-        name="artifact_var",
-        content="Artifact Variable",
-    )
-    artifact_var_with_subvar = TextArtifact(
-        name="artifact_var_with_subvar",
-        content="Artifact with subvar: {{ foo.bar }}",
-    )
-    artifact_template = TextArtifact(
-        name="artifact_template", content="Artifact Template"
-    )
-    artifact_template_with_var = TextArtifact(
-        name="artifact_template_with_var",
-        content="Artifact Template with subvar: {{ foo.bar }}",
-    )
-    text = TextArtifact(
-        name="text",
-        content="\n".join(
-            [
-                "Pure Jinja variable: {{ foo.bar }}",
-                "Pure Jinja template inclusion: {% include 'template.jinja' %}",
-                "Pure Jinja template referencing a variable: {% include 'template_with_var.jinja' %}"
-                "",
-                "Artifact as Jinja variable: {{ artifact_var }}",
-                "Artifact as variable referencing other variables: {{ artifact_var_with_subvar }}",
-                "Artifact as template: {% include 'artifact_template' %}",
-                "Artifact as template referencing variable: {% include 'artifact_template_with_var' %}",
-            ]
-        ),
-    )
-
-    context = {
-        "foo": {"bar": "baz"},
-        "template.jinja": "This template will be included.",
-        "template_with_var.jinja": "This template uses a variable: {{ foo.bar }}.",
-
-        "artifact_var": artifact_var,
-        "artifact_var_with_subvar": artifact_var_with_subvar,
-        "artifact_template": artifact_template,
-        "artifact_template_with_var": artifact_template_with_var,
-    }
-
-    referenced_vars = text.get_referenced_variables(
-        recursive=True,
-        **context,
-    )
-    print(f"Referenced variables ({len(referenced_vars)}): {referenced_vars}")
-    # exit()
-
-    rendered = text.render(strict=False, **context)
-    print(rendered)
