@@ -3,7 +3,7 @@ from ..artifact.image import ImageArtifact
 # TODO: for base64-encoded images, we should handle "data:image/jpeg;base64,".
 
 def image_to_placeholder(artifact: ImageArtifact) -> str:
-     return f"<artifact_im_start>{artifact.name}<artifact_im_end>"
+     return f"<artifact_img_start>{artifact.name}<artifact_img_end>"
 
 
 def image_to_metadata(artifact: ImageArtifact) -> str:
