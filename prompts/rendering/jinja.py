@@ -24,7 +24,7 @@ def render_template(
     subtemplates: dict[str, str],
     context: dict[str, str],
 ) -> str:
-    """Render a text artifact using Jinja2."""
+    """Renders a text artifact using Jinja2."""
     env = Environment(
         loader=DictLoader(subtemplates),
         trim_blocks=True,
