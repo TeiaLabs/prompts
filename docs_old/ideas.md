@@ -57,4 +57,9 @@
 - <https://github.com/griptape-ai/griptape>
 - <https://github.com/langchain-ai/langchain>
 - <https://github.com/promptslab/Promptify>
+  - Uses Jinja2 for templating (their template loading logic is very basic, does not support finding variables recursively)
+  - Provides several pre-built prompts
+  - Separates prompt templating from model execution (Processors implemented for each provider, Azure, OpenAI, Cohere, Anthropic, HuggingFace)
 - <https://github.com/jerryjliu/llama_index>
+- <https://github.com/rogeriochaves/langstream>
+  - Interesting functional programming ideas in their [docs](https://rogeriochaves.github.io/langstream/docs/stream-basics/composing_streams) (we do something very similar for agents)
