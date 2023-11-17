@@ -10,15 +10,27 @@ A prompt is an array of data that is provided to a model as input to instruct it
 Before being processed by a model, a prompt is typically represented using text; however, prompt data can also appear in different formats or include other types of data (e.g. images, multimodal models).
 Prompts appear in many formats/standards, and a prompt format may not be compatible between models, even for models that use the same training regimen and perform the same task.
 Several recent AI technologies, such as Large Language Models (LLMs) and Image generation models, use prompts.
+We provide a non-exhaustive list of relevant models and their respective providers below:
+
+| Model Name | Provider | Tasks |
+|---|---|---|
+| GPT | OpenAI | Language Modeling, Embeddings |
+| Llama | Open-source (Meta) | Language Modeling |
+| Claude | Anthropic | Language Modeling |
+| Bard | Google | Language Modeling |
+| Cohere | Cohere | Language Modeling, Embeddings |
+| Midjourney | Midjourney | Image Generation, Image Editing |
+| Dall-E | OpenAI | Image Generation, Image Editing |
+| StableDiffusion | Open-source (Stability.AI) | Image Generation, Image Editing |
 
 TeiaLabs makes heavy use of prompts in several projects, and we have developed a publicly-available package named "AIPrompts" to make it easier to build prompts.
 However, the current version of AIPrompts has some limitations and is missing some important features.
 We propose to redesign the prompt package to provide users with:
 
 - Prompts that support multimodal inputs
-- A templating engine (Jinja) to make textual prompts more dynamic/powerful by allowing users to reuse components
 - A prompt input abstraction that is modeled at the "atomic" level (e.g., modeling a chat conversation at the message level) to increase the flexibility of prompt creation
-- A separation between prompt creation and execution settings (model config/exec) to allow using the same base prompts for several models
+- A templating engine (Jinja) to make textual prompts more dynamic/powerful by allowing users to reuse components
+- A separation between prompt creation and model configuration/execution settings to allow users to leverage the same base prompts for several models
 - Compatibility between different prompt standards and model providers
 - Serialization and deserialization capabilities
 
@@ -87,14 +99,17 @@ graph TB
     class model modelstyle
 ```
 
-Although LMs are typically used to process and generate textual data, several approaches have been proposed to use LMs for other data types.
-Multimodal LLMs (MLLMs) are models that are trained to process multiple input types simultaneously and can potentially generate outputs in multiple formats.
+Although LMs are typically used to process and generate textual data, it is fair to assume that we have reached a point where textual data alone may not be enough to satisfy the needs of many specialized use cases.
+However, it is possible to create specialized models based on current LLM technology by creating semantic adaptations for non-textual data.
+Several approaches have been proposed to use LMs for other data types; one example are Multimodal LLMs (MLLMs).
+
+MLLMs are models that are trained to process multiple input types simultaneously and that can potentially generate outputs in multiple formats.
 Adding support for more data types increases the range of tasks that can be supported and opens up a wide range of possible use cases.
 As an example, Vision-Language Models (VLMs) are a type of MLLM that typically receives both visual and textual data and generates textual outputs.
 
 The exact mechanism by which these models are trained and process each data type varies by model; the optimal way to do this is still an open research question.
 Approaches typically involve translating data into a "universal" format that is compatible with the model.
-This may include using special delimitation tokens to signal the beginning and end of each data type, using a common semantic representation for all data types (i.e., a shared embedding space), or even translating data types to text.
+This may include using special delimitation tokens to signal the beginning and end of each data type, using a common semantic representation for all data types (i.e., a shared embedding space), or even translating data types into text.
 The diagram below depicts, at a high-level, the common preprocessing steps of an MLLM:
 
 ```mermaid
@@ -247,8 +262,6 @@ Although the current prompt template format is practical for simple use cases, i
 - Create conditional rendering flows based on input variables.
 If a user wants custom behavior for a prompt, they must implement the "rendering logic" by themselves and provide the final variable value to replace in the template.
 - Support multiple model types for the same prompt; we would have to create multiple entries for the same prompt template for each model type.
-- Compose prompts based on other artifacts, such as text snippets, different output formats, pieces of prompt definitions, or even entire prompts.
-Each prompt must be defined from scratch.
 
 ## AIPrompts V2
 
