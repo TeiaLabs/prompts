@@ -1,9 +1,9 @@
-import os
 import sys
 from pathlib import Path
 
-print(Path(__file__).parents[3])
-sys.path.insert(0, Path(__file__).parents[3].resolve())  # Add the root of the package to the path
+
+package_path = Path(__file__).parents[2]
+sys.path.insert(0, package_path.resolve())  # Add the root of the package to the path
 
 
 project = 'AIPrompts'
@@ -29,6 +29,15 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+
+# Autodoc settings
+autodoc_default_options = {
+    "members": True,  # Generate documentation for members of the target
+    "member-order": "bysource",  # Follow the same order as the source file
+    "private-members": True,  # Generate documentation for private members
+    # "special-members": True,  # Generate documentation for `__special__` members
+    "undoc-members": True,  # Generate documentation for undocumented members
+}
 
 # Autosummary settings
 autosummary_generate = True

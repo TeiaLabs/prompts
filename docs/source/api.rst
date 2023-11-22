@@ -1,8 +1,13 @@
 API
 ===
 
+.. currentmodule:: prompts
+
 .. autosummary::
    :toctree: generated
    :recursive:
 
-   prompts
+   artifact
+   prompt
+   rendering
+   exceptions
