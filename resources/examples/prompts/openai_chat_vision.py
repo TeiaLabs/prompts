@@ -96,7 +96,7 @@ def main():
         content="You are a helpful assistant.",
         role="system",
     )
-    img_path = Path(__file__).parent / "data" / "car.jpeg"
+    img_path = Path(__file__).parents[2] / "data" / "car.jpeg"
     img_base64 = load_image_as_base64_string(img_path)
     image = ImageArtifact(
         name="image",
