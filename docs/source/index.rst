@@ -2,23 +2,23 @@ AIPrompts Documentation
 =======================
 
 AIPrompts is a package that provides powerful and flexible abstractions to **create and render prompts** for Large Language Models (LLMs).
-The library provides a single prompt object abstraction/interface that is used to represent prompts in a generic fashion.
+The library provides a prompt object abstraction/interface that is used to represent prompts in a generic fashion.
 Then, these prompts can be rendered to become compatible with multiple LLM provider/model configurations with minimal code changes.
 Additionally, the library can be easily extended to support custom use cases.
 
-To begin using AIPrompts, please refer to the :doc:`getting_started/installation` and :doc:`getting_started/quickstart` guides.
+To begin using AIPrompts, please refer to the :doc:`Getting Started <getting_started/index>` guides.
 
 Core Features
 -------------
 
-* Flexible prompt creation and composition
-* Templating support (`Jinja2 <https://jinja.palletsprojects.com/en/>`_) to help model dynamic behaviors
-* Support for different prompt formats/standards
-* Multimodal prompt inputs (e.g., texts, images, audio, etc.)
-* Prompt templates for several applications and tasks
-* Extensible interfaces to support custom use cases and data types
-* Serialization and deserialization capabilities
-* Library of artifacts and prompts for common/specific use cases
+* **Flexible:** create and compose prompt objects via a unified interface
+* **Templating:** model dynamic behaviors via templating engines (`Jinja2 <https://jinja.palletsprojects.com/en/>`_)
+* **Multi-format:** switch between different prompt formats/standards
+* **Multimodal:** use multimodal prompt inputs (e.g., texts, images, etc.)
+* **Generic:** use prompt templates for several applications and tasks
+* **Extensible:** add support for your custom use cases and data types
+* **Serializable:** serialize and deserialize prompts and their components
+* **Examples:** library of examples for common and specific use cases
 
 Why Choose AIPrompts
 --------------------
@@ -45,13 +45,14 @@ However, if you are looking for a library that:
 
 Then AIPrompts is probably a good fit.
 
-
 Quick Links
 -----------
 
+* :doc:`Getting Started<getting_started/index>`: installation and quickstart demo.
+* :doc:`Modules Overview <modules/index>`: understand the purpose of the core modules.
+* :doc:`API Reference <api_reference/index>`: complete API reference.
 * `GitHub Repository <https://github.com/TeiaLabs/prompts>`_: source code, issue tracker, and other resources.
 * `PyPI <https://pypi.org/project/AIPrompts/>`_: official PyPI page of AIPrompts for Python.
-
 
 .. page divider
 .. raw:: html
@@ -60,14 +61,17 @@ Quick Links
 
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
    :caption: Getting Started
    :name: getting_started
 
+   getting_started/index
    getting_started/installation
    getting_started/quickstart
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
    :caption: Modules
    :name: modules
@@ -75,9 +79,10 @@ Quick Links
    modules/index
    modules/artifacts
    modules/prompts
-   modules/rendering
+   modules/renderers
 
 .. toctree::
+   :hidden:
    :glob:
    :caption: Examples
    :name: examples
@@ -86,11 +91,14 @@ Quick Links
    examples/text_completion/*
 
 .. toctree::
+   :glob:
+   :hidden:
    :maxdepth: 2
-   :caption: API reference
+   :caption: API Reference
    :name: api_reference
 
-   api
+   api_reference/index
+   api_reference/*
 
 
 Indices and tables

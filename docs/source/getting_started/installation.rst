@@ -38,9 +38,15 @@ If you are interested in contributing to AIPrompts or want to use the latest dev
 1. Clone the repository
 2. Navigate to the repository folder
 3. Check which dependencies you will require to run the package according to your needs (`requirements-<name>.txt` files in root folder)
-4. Install the package in development mode: `pip install -e .` (providing optional dependencies as needed)
+4. Install the package in development mode (providing optional dependencies as needed)
 
-For instance, if one wants to contribute to the documentation and also run the tests, the following command would be needed:
+To install AIPrompts in development mode without any optional dependencies, run the following command:
+
+.. code-block:: console
+
+    $ pip install -e .
+
+If you want to contribute to the documentation and also run the tests, the following command would be needed:
 
 .. code-block:: console
 
