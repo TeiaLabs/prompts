@@ -10,6 +10,9 @@ from ..rendering.jinja import (
 
 
 class TextArtifact(BaseArtifact):
+    """
+    Artifact for textual inputs.
+    """
     content: str
     content_encoding: str = "utf-8"
     type: str = "text"

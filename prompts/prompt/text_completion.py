@@ -5,6 +5,9 @@ from .base import BasePrompt
 
 
 class TextCompletionPrompt(BasePrompt):
+    """
+    Text completion prompt.
+    """
     content: str  # completion prompt starting point
     type: str = "prompt_text_completion"
 

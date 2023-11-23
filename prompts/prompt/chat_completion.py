@@ -5,6 +5,9 @@ from .base import BasePrompt
 
 
 class ChatCompletionPrompt(BasePrompt):
+    """
+    Chat completion prompt.
+    """
     content: list[str]  # chat message list
     type: str = "prompt_chat_completion"
 

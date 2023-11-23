@@ -3,10 +3,12 @@ from ..artifact.image import ImageArtifact
 # TODO: for base64-encoded images, we should handle "data:image/jpeg;base64,".
 
 def image_to_placeholder(artifact: ImageArtifact) -> str:
+     """Converts an ImageArtifact to a placeholder string."""
      return f"<artifact_img_start>{artifact.name}<artifact_img_end>"
 
 
 def image_to_metadata(artifact: ImageArtifact) -> str:
+    """Converts an image artifact to a string containing its metadata."""
     image_size = "Not available."
     if artifact.content_encoding == "base64":
         image_size = base64_size_bytes(artifact.content)
@@ -25,6 +27,7 @@ def image_to_metadata(artifact: ImageArtifact) -> str:
 
 
 def image_to_pillow_image(artifact: ImageArtifact) -> "PIL.Image":  # type: ignore
+    """Converts an ImageArtifact to a PIL.Image object."""
     import base64
     from io import BytesIO
     from PIL import Image
@@ -37,6 +40,7 @@ def image_to_pillow_image(artifact: ImageArtifact) -> "PIL.Image":  # type: igno
 
 
 def image_to_caption(artifact: ImageArtifact) -> str:
+    """Converts an ImageArtifact to a caption string using an image captioning model."""
     from transformers import pipeline
     pil_image = image_to_pillow_image(artifact)
     image_to_text = pipeline("image-to-text", model="nlpconnect/vit-gpt2-image-captioning")
@@ -45,7 +49,7 @@ def image_to_caption(artifact: ImageArtifact) -> str:
 
 
 def base64_size_bytes(b64string: str) -> int:
-    """Calculate the approximate size in bytes of a base64 encoded string."""
+    """Returns the approximate size in bytes of a base64 encoded string."""
     if isinstance(b64string, bytes):
         b64string = b64string.decode("utf-8")
     return (len(b64string) * 3 // 4) - b64string.count("=", -2)

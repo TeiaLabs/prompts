@@ -5,6 +5,9 @@ from ..artifact.base import BaseArtifact
 
 
 class BasePrompt(BaseArtifact):
+    """
+    Base class for prompt objects.
+    """
     artifacts: list[BaseArtifact]
     description: str = ""  # prompt description
     metadata: dict[str, Any] | None = None  # additional data about the prompt

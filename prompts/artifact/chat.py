@@ -1,3 +1,7 @@
+r"""
+Renderers for ChatMessageArtifact objects.
+"""
+
 from typing import Any, Callable, Literal, Optional
 
 from .base import BaseArtifact
@@ -8,6 +12,9 @@ ChatMessageRenderer = Callable[["ChatMessageArtifact"], Any]
 
 
 class ChatMessageArtifact(TextArtifact):
+    """
+    Artifact for a chat message.
+    """
     role: Literal["assistant", "system", "user"]
     sender_name: Optional[str]
     type: str = "chat_message"

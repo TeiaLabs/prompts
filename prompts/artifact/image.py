@@ -6,6 +6,9 @@ ImageRenderer = Callable[["ImageArtifact"], Any]
 
 
 class ImageArtifact(BaseArtifact):
+    """
+    Artifact for image inputs.
+    """
     content_encoding: Literal["base64", "binary"]
     type: str = "image"
 
