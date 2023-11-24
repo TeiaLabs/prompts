@@ -11,13 +11,13 @@ To begin using AIPrompts, please refer to the :doc:`Getting Started <getting_sta
 Core Features
 -------------
 
-* **Flexible:** create and compose prompt objects via a unified interface
+* **Flexibility:** create and compose prompt objects via a unified interface
 * **Templating:** model dynamic behaviors via templating engines (`Jinja2 <https://jinja.palletsprojects.com/en/>`_)
 * **Multi-format:** switch between different prompt formats/standards
 * **Multimodal:** use multimodal prompt inputs (e.g., texts, images, etc.)
 * **Generic:** use prompt templates for several applications and tasks
-* **Extensible:** add support for your custom use cases and data types
-* **Serializable:** serialize and deserialize prompts and their components
+* **Extensibility:** add support for your custom use cases and data types
+* **Serialization:** serialize and deserialize prompts and their components
 * **Examples:** library of examples for common and specific use cases
 
 Why Choose AIPrompts
