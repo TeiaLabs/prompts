@@ -1,0 +1,65 @@
+site_name: AIPrompts
+nav:
+  - Home:
+    - "Overview": index.md
+    - "Installation": getting_started/installation.md
+    - "Quickstart": getting_started/quickstart.md
+    - "Modules":
+      - "Overview": modules/index.md
+      - "Artifacts": modules/artifacts.md
+      - "Prompts": modules/prompts.md
+      - "Renderers": modules/renderers.md
+  - API Reference:
+    - api_reference/index.md
+    - api_reference/artifact.md
+    - api_reference/prompt.md
+    - api_reference/rendering.md
+    - api_reference/exceptions.md
+
+plugins:
+- search
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [src]
+        import:
+          - https://docs.python.org/3/objects.inv
+    options:
+      - show_symbol_type_heading: true
+      - show_symbol_type_toc: true
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - search.suggest
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode

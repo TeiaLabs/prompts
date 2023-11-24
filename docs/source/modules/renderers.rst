@@ -1,4 +1,0 @@
-Renderers
-=========
-
-TODO.

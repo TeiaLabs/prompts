@@ -1,37 +1,29 @@
-Installation
-============
+# Installation
 
-Requirements
-------------
+## Requirements
 
 To use AIPrompts, you need to have Python 3.11 or higher installed.
 We also recommend using a virtual environment to install the package's dependencies.
 
+## Installing using `pip`
 
-Installing using `pip`
-----------------------
+AIPrompts is [hosted on PyPI](https://pypi.org/project/AIPrompts/>) and can be installed using `pip`:
 
-AIPrompts is `hosted on PyPI <https://pypi.org/project/AIPrompts/>`_ and can be installed using `pip`:
-
-.. code-block:: console
-
-   $ pip install aiprompts
+```bash
+pip install aiprompts
+```
 
 This will install the latest release version of the package.
 
+## Installing from Source
 
-Installing from Source
-----------------------
+To install AIPrompts directly from its [GitHub repository](<https://github.com/TeiaLabs/prompts>), run the following command:
 
-To install AIPrompts directly from its `GitHub repository <https://github.com/TeiaLabs/prompts>`_, run the following command:
+```bash
+pip install git+https://github.com/TeiaLabs/prompts.git
+```
 
-.. code-block:: console
-
-    $ pip install git+https://github.com/TeiaLabs/prompts.git
-
-
-Installing from Source (Development)
-------------------------------------
+## Installing from Source (Development)
 
 If you are interested in contributing to AIPrompts or want to use the latest development versions, you can:
 
@@ -42,22 +34,19 @@ If you are interested in contributing to AIPrompts or want to use the latest dev
 
 To install AIPrompts in development mode without any optional dependencies, run the following command:
 
-.. code-block:: console
-
-    $ pip install -e .
+```bash
+pip install -e .
+```
 
 If you want to contribute to the documentation and also run the tests, the following command would be needed:
 
-.. code-block:: console
+```bash
+pip install -e .[docs,test]
+```
 
-    $ pip install -e .[docs,test]
-
-
-Now What?
----------
+## Now What?
 
 Now that you have AIPrompts installed, you can check out:
 
-* :doc:`Quickstart Guide <quickstart>`: getting started with the package.
-* :doc:`Module Overview <../modules/index>`: detailed explanation of the package's modules.
-
+* Quickstart Guide: getting started with the package.
+* Module Overview: detailed explanation of the package's modules.

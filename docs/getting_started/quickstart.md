@@ -1,8 +1,7 @@
-Quickstart
-==========
+# Quickstart
 
 This quickstart tutorial requires the library to be installed.
-If you haven't already, please follow the :doc:`installation` guide.
+If you haven't already, please follow the installation guide.
 
 In this quickstart, we'll walk through the basics of using the library to create a simple LLM text completion prompt.
 We'll show you how to:
@@ -13,43 +12,30 @@ We'll show you how to:
 * Render a prompt based on its artifacts and custom variable inputs
 * Call a model provider to obtain a text completion answer based on our prompt
 
-The Task At Hand
-----------------
+## The Task At Hand
 
 TODO.
 
-
-Creating Artifacts
-------------------
+## Creating Artifacts
 
 TODO.
 
-
-Dynamic Artifacts Via Jinja Templating
---------------------------------------
+## Dynamic Artifacts Via Jinja Templating
 
 TODO.
 
-
-Creating a Prompt
------------------
+## Creating a Prompt
 
 TODO.
 
-
-Rendering a Prompt
-------------------
+## Rendering a Prompt
 
 TODO.
 
-
-Calling a Model Provider
-------------------------
+## Calling a Model Provider
 
 TODO.
 
-
-Next Steps
-----------
+## Next Steps
 
 TODO.
