@@ -1,3 +1,5 @@
+autodoc_pydantic
+furo
 myst-parser
 sphinx
 sphinx-autobuild

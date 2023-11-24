@@ -16,7 +16,11 @@ extensions = [
     "sphinx.ext.autodoc",  # Include documentation from docstrings
     "sphinx.ext.autosummary",  # Generate autodoc summaries
     "sphinx.ext.intersphinx",  # Link to other projects’ documentation
+    # TODO: Maybe consider adding linkcode support
+    # "sphinx.ext.linkcode",  # Add links to source code (hosted elsewhere)
     "sphinx.ext.napoleon",  # Support for NumPy and Google style docstrings
+    "sphinx.ext.viewcode",  # Add links to source code (inside docs)
+    "sphinxcontrib.autodoc_pydantic",  # Improved Pydantic support
     # "sphinxcontrib.mermaid",  # Mermaid diagrams
 ]
 source_suffix = {
@@ -27,8 +31,10 @@ source_suffix = {
 templates_path = ['_templates']
 exclude_patterns = []
 
-html_theme = 'alabaster'
+# Theme settings
+html_theme = 'furo'
 html_static_path = ['_static']
+html_title = "AIPrompts"
 
 # Autodoc settings
 autodoc_default_options = {
@@ -50,3 +56,9 @@ napoleon_include_special_with_doc = True
 # napoleon_use_param = True
 # napoleon_use_ivar = True
 # napoleon_use_rtype = False
+
+# Intersphinx settings
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "pydantic": ("https://docs.pydantic.dev/latest/", None),
+}
