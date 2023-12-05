@@ -1,3 +1,6 @@
 mkdocs
 mkdocstrings[python]
+mkdocs-gen-files
+mkdocs-literate-nav
 mkdocs-material
+mkdocs-section-index

@@ -5,7 +5,7 @@ The library provides a prompt object abstraction/interface that is used to repre
 Then, these prompts can be rendered to become compatible with multiple LLM provider/model configurations with minimal code changes.
 Additionally, the library can be easily extended to support custom use cases.
 
-To begin using AIPrompts, please refer to the Getting Started guides.
+To begin using AIPrompts, please refer to the [Installation](./getting_started/installation.md) and [Quickstart](./getting_started/quickstart.md) guides.
 
 ## Core Features
 
@@ -44,8 +44,8 @@ Then AIPrompts is probably a good fit.
 
 ## Quick Links
 
-* Getting Started: installation and quickstart demo.
-* Modules Overview : understand the purpose of the core modules.
-* API Reference: complete API reference.
+* [Quickstart Guide](./getting_started/quickstart.md): demonstration of the library's core features.
+* [Concepts Overview](./concepts/index.md) : understand the core concepts and components of AIPrompts.
+* [API Reference][prompts]: complete Python API reference.
 * [GitHub Repository](<https://github.com/TeiaLabs/prompts>): source code, issue tracker, and other resources.
 * [PyPI](<https://pypi.org/project/AIPrompts/>): official PyPI page of AIPrompts for Python.

@@ -1,39 +1,70 @@
 site_name: AIPrompts
+
 nav:
   - Home:
-    - "Overview": index.md
+    - "Introduction": intro.md
     - "Installation": getting_started/installation.md
     - "Quickstart": getting_started/quickstart.md
-    - "Modules":
-      - "Overview": modules/index.md
-      - "Artifacts": modules/artifacts.md
-      - "Prompts": modules/prompts.md
-      - "Renderers": modules/renderers.md
-  - API Reference:
-    - api_reference/index.md
-    - api_reference/artifact.md
-    - api_reference/prompt.md
-    - api_reference/rendering.md
-    - api_reference/exceptions.md
+  - Concepts:
+    - "concepts/index.md"
+    - "Artifacts": concepts/artifacts.md
+    - "Prompts": concepts/prompts.md
+    - "Renderers": concepts/renderers.md
+  - API Reference: "reference/"
+
+watch:
+  - prompts
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 
 plugins:
-- search
-- mkdocstrings:
-    handlers:
-      python:
-        paths: [src]
-        import:
-          - https://docs.python.org/3/objects.inv
-    options:
-      - show_symbol_type_heading: true
-      - show_symbol_type_toc: true
+  - search
+  # There are some compatibility issues with navigation.indexes and section-index.
+  # Fix when navigation.indexes is enabled: reference the auto-generated API as "reference/*".
+  - section-index
+  - gen-files:
+      scripts:
+        - docs/scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          import:
+            - https://docs.python.org/3/objects.inv
+          options:
+            docstring_style: "google"
+            heading_level: 2
+            members_order: "source"
+            show_if_no_docstring: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
 
 theme:
   name: material
   features:
+    - content.code.annotate
     - content.code.copy
+    # - navigation.indexes
     - navigation.sections
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
     - search.highlight
     - search.suggest

@@ -48,5 +48,5 @@ pip install -e .[docs,test]
 
 Now that you have AIPrompts installed, you can check out:
 
-* Quickstart Guide: getting started with the package.
-* Module Overview: detailed explanation of the package's modules.
+* [Quickstart Guide](./quickstart.md): getting started with the package.
+* [Concepts Overview](../concepts/index.md): detailed explanation of the package's modules.
