@@ -2,6 +2,7 @@
 
 An **Artifact** is a data structure and interface used to represent different types of **prompt components** (i.e., the elements that make up a prompt).
 The rationale behind this abstraction is to enable the creation of a **modular** and **extensible** prompt building system that also supports **multiple data types** (e.g., for multimodal prompting scenarios).
+Artifacts can be serialized and deserialized using Pydantic 2 idioms.
 
 Quick links:
 
