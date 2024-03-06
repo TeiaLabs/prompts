@@ -1,8 +1,9 @@
 import re
 from enum import Enum
-from typing import NotRequired, TypedDict
+from typing import NotRequired
 
 from pydantic import BaseModel, Field
+from typing_extensions import TypedDict
 
 
 # ==== Generic classes ====
