@@ -42,7 +42,7 @@ with open("README.md", "r") as readme_file:
     long_description = readme_file.read()
 
 setuptools.setup(
-    name="AIPrompts",
+    name="AI-Prompts2",
     # version=get_version(),
     version="1.0.0",
     author="Teialabs",
