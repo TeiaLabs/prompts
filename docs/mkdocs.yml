@@ -1,8 +1,9 @@
 site_name: AIPrompts
+docs_dir: ./docs
 
 nav:
   - Home:
-    - "Introduction": intro.md
+    - "Introduction": index.md
     - "Installation": getting_started/installation.md
     - "Quickstart": getting_started/quickstart.md
   - Concepts:
@@ -13,7 +14,7 @@ nav:
   - API Reference: "reference/"
 
 watch:
-  - prompts
+  - ../prompts
 
 markdown_extensions:
   - admonition
@@ -38,7 +39,7 @@ plugins:
   - section-index
   - gen-files:
       scripts:
-        - docs/scripts/gen_ref_pages.py
+        - ./scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
   - mkdocstrings:
