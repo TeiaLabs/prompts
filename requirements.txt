@@ -1,4 +1,0 @@
-jinja2
-pyaml
-pydantic
-python-dotenv
