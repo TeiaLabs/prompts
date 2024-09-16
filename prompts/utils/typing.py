@@ -2,6 +2,7 @@ import inspect
 from typing import Any
 
 from pydantic import (
+    SerializeAsAny,
     ValidationError,
     ValidationInfo,
     ValidatorFunctionWrapHandler,
@@ -67,6 +68,6 @@ def artifact_subtype_converter(
 
 
 AnyArtifact = Annotated[
-    BaseArtifact,
+    SerializeAsAny[BaseArtifact],
     WrapValidator(artifact_subtype_converter),
 ]
