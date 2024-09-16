@@ -22,9 +22,6 @@ class TextArtifact(BaseArtifact):
         recursive: bool = False,
         **context: dict[str, BaseArtifact | str],
     ) -> set[str]:
-        if recursive and not context:
-            raise ValueError("Context required for recursive reference resolution.")
-
         # Use Jinja to extract current variable references
         all_vars = set(get_variables(self.content))
         all_subtemplates = set(get_subtemplates(self.content))

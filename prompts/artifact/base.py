@@ -22,9 +22,8 @@ class BaseArtifact(BaseModel):
 
         Args:
             recursive: if `True`, recursively get referenced artifacts.
-            context: references to use when searching for recursive
-                references. Mandatory if `recursive=True`. Usually
-                contains only artifacts, but can also contain objects
+            context: context to use when searching for recursive references.
+                Usually contains only artifacts, but can also contain objects
                 that are not artifacts (e.g., just variables).
 
         Returns:
