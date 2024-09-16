@@ -1,14 +1,16 @@
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Literal
 
 from ..artifact.base import BaseArtifact
+from ..utils.typing import AnyArtifact
 
 
 class BasePrompt(BaseArtifact):
     """
     Base class for prompt objects.
     """
-    artifacts: list[BaseArtifact]
+    type: Literal["base-prompt"] = "base-prompt"
+    artifacts: list[AnyArtifact]
     description: str = ""  # prompt description
     metadata: dict[str, Any] | None = None  # additional data about the prompt
 

@@ -7,7 +7,6 @@ from typing import Any, Callable, Literal, Optional
 from .base import BaseArtifact
 from .text import TextArtifact
 
-
 ChatMessageRenderer = Callable[["ChatMessageArtifact"], Any]
 
 
@@ -16,8 +15,8 @@ class ChatMessageArtifact(TextArtifact):
     Artifact for a chat message.
     """
     role: Literal["assistant", "system", "user"]
-    sender_name: Optional[str]
-    type: str = "chat_message"
+    sender_name: Optional[str] = None
+    type: Literal["chat-message"] = "chat-message"
 
     def render(
         self,
