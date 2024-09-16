@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel
 
@@ -8,7 +8,7 @@ class BaseArtifact(BaseModel):
     """Base class for all artifacts."""
 
     name: str  # unique identifier to reference the artifact
-    type: str  # artifact type (specific artifact types override this)
+    type: Literal["base"] = "base"  # artifact type (specific artifact types override this)
     content: bytes | str  # artifact content
 
     @abstractmethod

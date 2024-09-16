@@ -1,12 +1,12 @@
 from collections.abc import Iterable
-from typing import cast
+from typing import Literal, cast
 
-from .base import BaseArtifact
 from ..rendering.jinja import (
     get_subtemplates,
     get_variables,
     render_template,
 )
+from .base import BaseArtifact
 
 
 class TextArtifact(BaseArtifact):
@@ -15,7 +15,7 @@ class TextArtifact(BaseArtifact):
     """
     content: str
     content_encoding: str = "utf-8"
-    type: str = "text"
+    type: Literal["text"] = "text"
 
     def get_referenced_variables(
         self,

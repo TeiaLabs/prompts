@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 from ..artifact.chat import ChatMessageArtifact, ChatMessageRenderer
 from .base import BasePrompt
@@ -9,7 +9,7 @@ class ChatCompletionPrompt(BasePrompt):
     Chat completion prompt.
     """
     content: list[str]  # chat message list
-    type: str = "prompt_chat_completion"
+    type: Literal["prompt-chat-completion"] = "prompt-chat-completion"
 
     def get_referenced_variables(
         self,

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Literal
 
 from ..artifact.text import TextArtifact
 from .base import BasePrompt
@@ -9,7 +9,7 @@ class TextCompletionPrompt(BasePrompt):
     Text completion prompt.
     """
     content: str  # completion prompt starting point
-    type: str = "prompt_text_completion"
+    type: Literal["prompt-text-completion"] = "prompt-text-completion"
 
     def get_referenced_variables(
         self,

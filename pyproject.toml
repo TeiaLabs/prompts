@@ -1,3 +1,38 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["prompts"]
+
+[project]
+name = "aiprompts"
+authors = [{name = "Teia Labs"}]
+description = "Create and parse prompts for large language models."
+readme = "README.md"
+requires-python = ">=3.12"
+dynamic = ["version"]
+dependencies = [
+    "jinja2",
+    "pyaml",
+    "pydantic",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+docs = [
+    "mkdocs",
+    "mkdocstrings[python]",
+    "mkdocs-gen-files",
+    "mkdocs-literate-nav",
+    "mkdocs-material",
+    "mkdocs-section-index",
+]
+
 [tool.black]
 line-length = 88
 skip-string-normalization = false
