@@ -8,6 +8,7 @@ from pydantic import (
     ValidatorFunctionWrapHandler,
     WrapValidator,
 )
+from pydantic.error_wrappers import ErrorWrapper
 from typing_extensions import Annotated
 
 from ..artifact.base import BaseArtifact
@@ -64,7 +65,18 @@ def artifact_subtype_converter(
         if type := subclass.model_fields.get("type"):
             if type.default == v.get("type", None):
                 return subclass.model_validate(v)
-    raise ValidationError("No subclass matched.")
+
+    raise ValidationError(
+        [
+            ErrorWrapper(
+                ValueError(
+                    f"Invalid artifact type: {v.get('type', None)}. "
+                    f"Expected one of: {[subclass.model_fields['type'].default for subclass in get_all_subclasses(BaseArtifact)]}"
+                ),
+            )
+        ],
+        model=BaseArtifact,
+    )
 
 
 AnyArtifact = Annotated[
