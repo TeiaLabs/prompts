@@ -3,12 +3,10 @@ from typing import Any
 
 from pydantic import (
     SerializeAsAny,
-    ValidationError,
     ValidationInfo,
     ValidatorFunctionWrapHandler,
     WrapValidator,
 )
-from pydantic.error_wrappers import ErrorWrapper
 from typing_extensions import Annotated
 
 from ..artifact.base import BaseArtifact
@@ -51,7 +49,7 @@ def artifact_subtype_converter(
         info: The validation info to use.
 
     Raises:
-        ValidationError: If no subclass matches.
+        ValueError: If no subclass matches.
 
     Returns:
         The converted value.
@@ -66,16 +64,9 @@ def artifact_subtype_converter(
             if type.default == v.get("type", None):
                 return subclass.model_validate(v)
 
-    raise ValidationError(
-        [
-            ErrorWrapper(
-                ValueError(
-                    f"Invalid artifact type: {v.get('type', None)}. "
-                    f"Expected one of: {[subclass.model_fields['type'].default for subclass in get_all_subclasses(BaseArtifact)]}"
-                ),
-            )
-        ],
-        model=BaseArtifact,
+    raise ValueError(
+        f"Invalid artifact type: {v.get('type', None)}. "
+        f"Expected one of: {[subclass.model_fields['type'].default for subclass in get_all_subclasses(BaseArtifact)]}"
     )
 
 
